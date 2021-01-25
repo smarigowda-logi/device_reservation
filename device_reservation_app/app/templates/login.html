@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <nav class= "welcome">
+        <h1><div>Welcome to Device Inventory Page</div></h1>
+    </nav>
+    <nav class="signin">
+    <h1>Please login to access this page</h1>
+    </nav>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <nav class="login_param1">
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+            {% for error in form.password.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.remember_me() }} {{ form.remember_me.label }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+        </nav>
+    </form>
+    <nav class="new_user">
+    <p>New User? <a href="{{ url_for('register') }}">Click to Register</a></p>
+    <p>Forgot your password?<a href="{{ url_for('reset_password_request') }}">Click to Reset</a></p>
+    </nav>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ current_user.username }}!</h1>
+    <header>
+            <nav class= "welcome">
+                <div>Welcome to Device Inventory Page</div>
+            </nav>
+         </header>
+    <form action="reserve_device">
+    <input class="button1" type="submit" value="Reserve Device">
+    </form>
+    <nav class= "help_text1">
+        <div>Select this option if you need to reserve a device for manual testing </div>
+    </nav>
+    <form action="job_schedule">
+    <input class="button2" type="submit" value="Schedule Jenkins Job">
+    </form>
+    <nav class= "help_text2">
+        <div>Select this option to run jenkins job</div>
+    </nav>
+    <form action="device_inventory">
+        <input class="button3" type="submit" value="Device Inventory View">
+    </form>
+    <nav class= "help_text3">
+        <div>Select this option to view current Device Inventory snapshot</div>
+    </nav>
+{% endblock %}

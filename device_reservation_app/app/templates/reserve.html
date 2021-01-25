@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+      <div class="wrapper"></div>
+    <header>
+            <nav class= "welcome">
+                <div>Here are the reservation details</div>
+            </nav>
+    </header>
+    <form action="reserve" method="get">
+        {{ data }}
+        <button type="submit" class="rbutton">Submit</button>
+    </form>
+{% endblock %}

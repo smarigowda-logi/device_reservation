@@ -1,0 +1,106 @@
+2021-01-22 12:08:19,299 ERROR: Exception on /reserve [GET] [in /Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1277, in _execute_context
+    cursor, statement, parameters, context
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 609, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: reservation.agent
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/routes.py", line 149, in reserve
+    db.session.commit()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/scoping.py", line 163, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 1046, in commit
+    self.transaction.commit()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 504, in commit
+    self._prepare_impl()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 483, in _prepare_impl
+    self.session.flush()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2540, in flush
+    self._flush(objects)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2682, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    with_traceback=exc_tb,
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/util/compat.py", line 182, in raise_
+    raise exception
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/session.py", line 2642, in _flush
+    flush_context.execute()
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/unitofwork.py", line 422, in execute
+    rec.execute(self)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/unitofwork.py", line 589, in execute
+    uow,
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/persistence.py", line 245, in save_obj
+    insert,
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/orm/persistence.py", line 1136, in _emit_insert_statements
+    statement, params
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/sql/elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1130, in _execute_clauseelement
+    distilled_params,
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1317, in _execute_context
+    e, statement, parameters, cursor, context
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1511, in _handle_dbapi_exception
+    sqlalchemy_exception, with_traceback=exc_info[2], from_=e
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/util/compat.py", line 182, in raise_
+    raise exception
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/base.py", line 1277, in _execute_context
+    cursor, statement, parameters, context
+  File "/Users/smarigowda/UI_code/Scheduler/venv/lib/python3.7/site-packages/sqlalchemy/engine/default.py", line 609, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: reservation.agent
+[SQL: INSERT INTO reservation (agent, timestamp, duration, ruser) VALUES (?, ?, ?, ?)]
+[parameters: ('vcal3', '2021-01-22 20:08:19.299405', '5', 'sqa_user')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2021-01-22 12:19:18,157 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:19:44,218 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:20:24,075 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:20:35,238 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:20:41,189 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:24:57,313 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:25:25,122 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:25:32,553 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:25:36,285 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:25:48,044 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:26:22,586 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:26:34,122 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:26:37,280 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:27:05,406 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:27:09,811 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:27:16,629 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:27:19,676 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:27:56,944 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:28:31,061 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:28:45,179 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:31:21,934 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:32:39,162 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:32:45,282 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:32:49,287 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:33:10,435 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:33:21,071 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:34:36,490 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:35:14,894 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:35:30,470 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:35:50,513 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:35:57,954 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:36:21,228 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]
+2021-01-22 12:38:32,093 INFO: Device Reservation startup [in /Users/smarigowda/UI_code/Scheduler/Device_Reservation/app/__init__.py:49]

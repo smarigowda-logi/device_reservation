@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>
+            <nav class= "welcome">
+                <div>Welcome to Device Reservation</div>
+            </nav>
+         </h1>
+    <form method="POST" action="reserve_device">
+        {{ form.hidden_tag() }}
+        {{ form.platform.label(class_="rtarget" )}}
+        {{ form.platform(class_="rtarget_text_box", size=20) }}
+
+        {{ form.duration.label(class_="duration" )}}
+        {{ form.duration (class_="duration_text_box" )}}
+
+    {{ form.submit(class_="rbutton" )}}
+
+    </form>
+{% endblock %}

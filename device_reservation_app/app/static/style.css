@@ -1,0 +1,605 @@
+:root {
+    background: linear-gradient(250deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 180%), rgba(162, 225, 234, 0.59);
+}
+html, body {
+    height: 100%
+}
+
+body{
+    margin: 0;
+}
+.wrapper {
+    width: 120%;
+    max-width: 10rempx;
+    margin: 0 auto;
+    background-color: var(--background);
+    min-height: 50rem;
+}
+
+.panel{
+    position: absolute;
+    width: 300px;
+    height: 20px;
+    left:   900px;
+    top:    50px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: center;
+
+    color: #000000;
+}
+
+.welcome {
+    position: absolute;
+    width: 653px;
+    height: 55px;
+    left: 320px;
+    top: 113px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 42px;
+    text-align: center;
+
+    color: #000000;
+    }
+
+.signin{
+    position: absolute;
+    width: 500px;
+    height: 21px;
+    left: 350px;
+    top: 200px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: regular;
+    font-size: 15px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+}
+
+.login_param1{
+    position: absolute;
+    width: 600px;
+    height: 300px;
+    left: 460px;
+    top: 280px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: regular;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: left;
+}
+.new_user{
+    position: absolute;
+    width: 500px;
+    height: 21px;
+    left: 470px;
+    top: 500px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: regular;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: left;
+}
+.env_check{
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    left: 450px;
+    top: 200px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: regular;
+    font-size: 18px;
+    line-height: 21px;
+
+    text-align: center;
+}
+.build {
+    position: absolute;
+    width: 108px;
+    height: 21px;
+    left: 400px;
+    top: 269px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.target {
+    position: absolute;
+    width: 128px;
+    height: 21px;
+    left: 400px;
+    top: 345px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.label {
+    position: absolute;
+    width: 54px;
+    height: 21px;
+    left: 400px;
+    top: 413px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.priority {
+    position: absolute;
+    width: 60px;
+    height: 21px;
+    left: 400px;
+    top: 484px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.action {
+    position: absolute;
+    width: 53px;
+    height: 21px;
+    left: 400px;
+    top: 557px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+
+.user {
+    position: absolute;
+    width: 54px;
+    height: 21px;
+    left: 400px;
+    top: 640px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.button1 {
+    display: flex;
+    padding: 10px;
+    position: absolute;
+    position: absolute;
+    width: 336px;
+    height: 64px;
+    left: 304px;
+    top: 282px;
+    background: rgba(105, 100, 164, 0.54);
+    border-radius: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #000000;
+}
+
+.button2 {
+    display: flex;
+    padding: 10px;
+    position: absolute;
+    position: absolute;
+    width: 336px;
+    height: 64px;
+    left: 304px;
+    top: 386px;
+    background: rgba(105, 100, 164, 0.54);
+    border-radius: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #000000;
+}
+
+.button3 {
+    display: flex;
+    padding: 10px;
+    position: absolute;
+    position: absolute;
+    width: 336px;
+    height: 64px;
+    left: 304px;
+    top: 490px;
+    background: rgba(105, 100, 164, 0.54);
+    border-radius: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #000000;
+}
+
+.button{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px;
+
+    position: absolute;
+    width: 316px;
+    height: 55px;
+    left: 562px;
+    top: 737px;
+
+    background: rgba(105, 100, 164, 0.54);
+    border-radius: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #000000;
+}
+
+.build_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 265px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.target_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 337px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.label_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 602px;
+    top: 409px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.priority_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 602px;
+    top: 481px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.help_text1 {
+    position: absolute;
+    width: 417px;
+    height: 42px;
+    left: 693px;
+    top: 296px;
+
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+
+    color: #000000;
+}
+
+.help_text2 {
+    position: absolute;
+    width: 281px;
+    height: 21px;
+    left: 760px;
+    top: 400px;
+
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+
+    color: #000000;
+}
+
+.help_text3 {
+    position: absolute;
+    width: 324px;
+    height: 42px;
+    left: 739px;
+    top: 500px;
+
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+
+    color: #000000;
+}
+
+select {
+    position: absolute;
+    width: 180px;
+    height: 30px;
+    left: 602px;
+    top: 553px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 25px;
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.user_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 602px;
+    top: 630px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.rtarget {
+    position: absolute;
+    width: 128px;
+    height: 21px;
+    left: 350px;
+    top: 245px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.rtarget_text_box{
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 237px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+/*
+.rig{
+    position: absolute;
+    width: 128px;
+    height: 21px;
+    left: 350px;
+    top: 315px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.rig_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 307px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+*/
+.duration{
+    position: absolute;
+    width: 128px;
+    height: 21px;
+    left: 350px;
+    top: 315px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.duration_text_box {
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 307px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.ruser {
+    position: absolute;
+    width: 128px;
+    height: 21px;
+    left: 350px;
+    top: 385px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #000000;
+
+}
+
+.ruser_text_box{
+    position: absolute;
+    width: 180px;
+    height: 25px;
+    left: 601px;
+    top: 377px;
+
+    background: rgba(196, 196, 196, 0.5);
+    border-radius: 10px;
+}
+
+.rbutton {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px;
+
+    position: absolute;
+    width: 316px;
+    height: 55px;
+    left: 462px;
+    top: 551px;
+
+    background: rgba(105, 100, 164, 0.54);
+    border-radius: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #000000;
+}

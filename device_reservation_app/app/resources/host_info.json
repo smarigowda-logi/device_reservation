@@ -1,0 +1,21 @@
+{
+  "host_info": {
+    "Kong": {
+      "vcal2": [
+        "HDMI"
+      ],
+      "vcal3": [
+        "HDMI",
+        "TAP"
+      ],
+      "vcal5": [
+        "USB",
+        "HDMI"
+      ],
+      "vcal6": [
+        "USB",
+        "TAP"
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+      <header>
+            <nav class= "welcome">
+                <div>Select environment values</div>
+            </nav>
+     </header>
+    <form action="" method="post">
+    <nav class="env_check">
+    <table class="table table-bordered">
+    <thead>
+      {% for env in env_var %}
+      <tr>
+            <td><input id="{{ env }}" type="checkbox" name="{{ env }}">{{ env }}</td>
+      </tr>
+      {% endfor %}
+    </thead>
+    </table>
+    <br><br><br>
+    <div class="form-group col-md-1">
+    <input type="submit" value="Submit" class="btn btn-info"/>
+    </div>
+    </nav>
+    </form>
+{% endblock %}
