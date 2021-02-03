@@ -1,23 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
-    <title>Device Inventory</title>
-    <style>
-        li { list-style-type: none; }
-    </style>
-    <script src="static/jquery.js" type="text/javascript"></script>
-</head>
-<body>
-    <div class="wrapper"></div>
-    <header>
-            <nav class= "welcome">
-                <div>Welcome to Device Inventory</div>
-            </nav>
-         </header>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+    <h1>
+            <nav class= "welcome">
+                <div>Enter Agent Details</div>
+            </nav>
+         </h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.agent_name.label()}}
+        {{ form.agent_name(size=20) }}
+        <br>
+        {{ form.agent_user.label()}}
+        {{ form.agent_user()}}
+        <br>
+        {{ form.agent_password.label()}}
+        {{ form.agent_password()}}
+        <br>
+        {{ form.agent_serial.label()}}
+        {{ form.agent_serial()}}
+        <br>
+        {{ form.agent_access.label()}}
+        {{ form.agent_access()}}
+        <br>
+        {{ form.agent_env.label()}}
+        {{ form.agent_env()}}
+        <br>
+        {{ form.agent_ipaddr.label()}}
+        {{ form.agent_ipaddr()}}
+        <br>
+        {{ form.agent_location.label()}}
+        {{ form.agent_location()}}
+        <br>
+        {{ form.agent_command_line_access.label()}}
+        {{ form.agent_command_line_access()}}
+
+    {{ form.submit(class_="rbutton" )}}
+
+    </form>
+{% endblock %}

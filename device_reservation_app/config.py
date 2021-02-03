@@ -16,5 +16,6 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['smarigowda@logitech.com']
     ELASTICSEARCH_URL = os.environ.get('MS_TRANSLATOR_KEY')
+    REDIS_URL = os.environ.get('REDIS_URL', 'redis://')
     POSTS_PER_PAGE = 25
 

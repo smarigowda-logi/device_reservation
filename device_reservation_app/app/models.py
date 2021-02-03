@@ -1,4 +1,6 @@
 import jwt
+import redis
+import rq
 from time import time
 from app import db, login
 from flask import current_app
@@ -135,12 +137,28 @@ class Reservation(db.Model):
     r_user = db.Column(db.String(64))
     __table_args__ = (UniqueConstraint('r_user', 'env', name='unique_agent_user'),
                       )
+    #tasks = db.relationship('Task', backref='reservation', lazy='dynamic')
 
     def __repr__(self):
         return '<Reservation {}>'.format(self.timestamp)
 
+    # def launch_task(self, name, description, *args, **kwargs):
+    #     rq_job = current_app.task_queue.enqueue('app.tasks.' + name, self.id,
+    #                                             *args, **kwargs)
+    #     task = Task(id=rq_job.get_id(), name=name, description=description,
+    #                 user=self)
+    #     db.session.add(task)
+    #     return task
 
-class AgentProfile(db.Model):
+    # def get_tasks_in_progress(self):
+    #     return Task.query.filter_by(user=self, complete=False).all()
+    #
+    # def get_task_in_progress(self, name):
+    #     return Task.query.filter_by(name=name, user=self,
+    #                                 complete=False).first()
+
+
+class Agentprofile(db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
     a_name = db.Column(db.String(64), unique=True)
@@ -158,3 +176,22 @@ class AgentProfile(db.Model):
 
     def __repr__(self):
         return '<Agent {}>'.format(self.a_name)
+
+
+# class Task(db.Model):
+#     id = db.Column(db.String(36), primary_key=True)
+#     name = db.Column(db.String(128), index=True)
+#     description = db.Column(db.String(128))
+#     user_id = db.Column(db.Integer, db.ForeignKey('reservation.id'))
+#     complete = db.Column(db.Boolean, default=False)
+#
+#     def get_rq_job(self):
+#         try:
+#             rq_job = rq.job.Job.fetch(self.id, connection=current_app.redis)
+#         except (redis.exceptions.RedisError, rq.exceptions.NoSuchJobError):
+#             return None
+#         return rq_job
+#
+#     def get_progress(self):
+#         job = self.get_rq_job()
+#         return job.meta.get('progress', 0) if job is not None else 100

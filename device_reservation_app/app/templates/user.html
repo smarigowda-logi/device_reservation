@@ -8,7 +8,7 @@
                 <td>
                     <h1> Hello {{ user.username }} , below are your reservations:</h1>
                     {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-                    <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+                    <p><a href="{{ url_for('main.edit_profile') }}">Edit your profile</a></p>
                 </td>
             </tr>
         </table>

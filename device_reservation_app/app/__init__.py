@@ -9,6 +9,10 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from elasticsearch import Elasticsearch
+from flask_executor import Executor
+import rq
+from redis import Redis
+
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -17,19 +21,22 @@ login.login_view ='auth.login'
 login.login_message = 'Please login to access this page'
 mail = Mail()
 bootstrap = Bootstrap()
+executor = Executor()
 
 
 def create_app(config_class=Config, bp=None):
     app = Flask(__name__)
     app.config.from_object(config_class)
-
     db.init_app(app)
+    executor.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
     mail.init_app(app)
     bootstrap.init_app(app)
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
+    app.redis = Redis.from_url(app.config['REDIS_URL'])
+    app.task_queue = rq.Queue('device-reserve-tasks', connection=app.redis)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)

@@ -46,3 +46,16 @@ class ReserveDevice(FlaskForm):
     duration = StringField('Duration', [DataRequired()])
     username = StringField('Username', [DataRequired()])
     submit = SubmitField('Select Environment')
+
+
+class AgentEntry(FlaskForm):
+    agent_name = StringField('Agent name', [DataRequired()])
+    agent_user = StringField('Agent Username', [DataRequired()])
+    agent_password = StringField('Password', [DataRequired()])
+    agent_serial = StringField('DNS Name', [DataRequired()])
+    agent_access = StringField('UI Access', [DataRequired()])
+    agent_env = StringField('Environment/Rigs', [DataRequired()])
+    agent_ipaddr = StringField('IP Address', [DataRequired()])
+    agent_location = StringField('Location', [DataRequired()])
+    agent_command_line_access = StringField('Command Line Access', [DataRequired()])
+    submit = SubmitField('Add Agent')
