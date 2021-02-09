@@ -5,11 +5,14 @@ from time import time
 from app import db, login
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import UniqueConstraint
 from flask_login import UserMixin
 from datetime import datetime
 from hashlib import md5
 from app.search import add_to_index, remove_from_index, query_index
+
+Session = sessionmaker(bind=db)
 
 
 class SearchableMixin(object):
@@ -55,10 +58,10 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
-followers = db.Table(
-        'followers', db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-                     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)
+# followers = db.Table(
+#         'followers', db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+#                      db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
+# )
 
 
 class User(UserMixin, db.Model):
@@ -66,15 +69,16 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    #reservation = db.relationship('Reservation', backref='user', lazy='dynamic')
+    reserve = db.relationship('Reservation', backref='reserve_user', lazy='dynamic')
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    followed = db.relationship(
-        'User', secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref('followers', lazy='dynamic'),
-        lazy='dynamic'
-    )
+    administrator = db.Column(db.String(32))
+    # followed = db.relationship(
+    #     'User', secondary=followers,
+    #     primaryjoin=(followers.c.follower_id == id),
+    #     secondaryjoin=(followers.c.followed_id == id),
+    #     backref=db.backref('followers', lazy='dynamic'),
+    #     lazy='dynamic'
+    #)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -89,23 +93,23 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
-    def follow(self, user):
-        if not self.is_following(user):
-            self.followed.append(user)
-
-    def unfollow(self, user):
-        if self.is_following(user):
-            self.followed.remove(user)
-
-    def is_following(self, user):
-        return self.followed.filter(
-            followers.c.followed_id == user.id).count > 0
-
-    def followed_posts(self):
-        followed = Reservation.query.join(followers, (followers.c.followed_id == Reservation.user_id)).\
-            filter(followers.c.follower_id == self.id)
-        own = Reservation.query.filter_by(user_id=self.id)
-        return followed.union(own).order_by(Reservation.timestamp.desc())
+    # def follow(self, user):
+    #     if not self.is_following(user):
+    #         self.followed.append(user)
+    #
+    # def unfollow(self, user):
+    #     if self.is_following(user):
+    #         self.followed.remove(user)
+    #
+    # def is_following(self, user):
+    #     return self.followed.filter(
+    #         followers.c.followed_id == user.id).count > 0
+    #
+    # def followed_posts(self):
+    #     followed = Reservation.query.join(followers, (followers.c.followed_id == Reservation.user_id)).\
+    #         filter(followers.c.follower_id == self.id)
+    #     own = Reservation.query.filter_by(user_id=self.id)
+    #     return followed.union(own).order_by(Reservation.timestamp.desc())
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
@@ -134,34 +138,22 @@ class Reservation(db.Model):
     env = db.Column(db.String(250))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     duration = db.Column(db.Integer)
+    platform = db.Column(db.String(64))
     r_user = db.Column(db.String(64))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     __table_args__ = (UniqueConstraint('r_user', 'env', name='unique_agent_user'),
                       )
-    #tasks = db.relationship('Task', backref='reservation', lazy='dynamic')
 
     def __repr__(self):
         return '<Reservation {}>'.format(self.timestamp)
-
-    # def launch_task(self, name, description, *args, **kwargs):
-    #     rq_job = current_app.task_queue.enqueue('app.tasks.' + name, self.id,
-    #                                             *args, **kwargs)
-    #     task = Task(id=rq_job.get_id(), name=name, description=description,
-    #                 user=self)
-    #     db.session.add(task)
-    #     return task
-
-    # def get_tasks_in_progress(self):
-    #     return Task.query.filter_by(user=self, complete=False).all()
-    #
-    # def get_task_in_progress(self, name):
-    #     return Task.query.filter_by(name=name, user=self,
-    #                                 complete=False).first()
 
 
 class Agentprofile(db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
+    a_user_id = db.Column(db.Integer)
     a_name = db.Column(db.String(64), unique=True)
+    a_platform = db.Column(db.String(64))
     a_user = db.Column(db.String(64))
     a_pass = db.Column(db.String(64))
     a_serial = db.Column(db.String(64))
@@ -172,26 +164,20 @@ class Agentprofile(db.Model):
     a_command_line = db.Column(db.String(32))
     a_duration = db.Column(db.Integer)
     a_owner = db.Column(db.String(64))
-    a_last_reserved = db.Column(db.DateTime, index=True)
+    a_last_reserved = db.Column(db.String(64))
 
     def __repr__(self):
         return '<Agent {}>'.format(self.a_name)
 
 
-# class Task(db.Model):
-#     id = db.Column(db.String(36), primary_key=True)
-#     name = db.Column(db.String(128), index=True)
-#     description = db.Column(db.String(128))
-#     user_id = db.Column(db.Integer, db.ForeignKey('reservation.id'))
-#     complete = db.Column(db.Boolean, default=False)
-#
-#     def get_rq_job(self):
-#         try:
-#             rq_job = rq.job.Job.fetch(self.id, connection=current_app.redis)
-#         except (redis.exceptions.RedisError, rq.exceptions.NoSuchJobError):
-#             return None
-#         return rq_job
-#
-#     def get_progress(self):
-#         job = self.get_rq_job()
-#         return job.meta.get('progress', 0) if job is not None else 100
+class History(db.Model):
+    __searchable__ = ['body']
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(64))
+    agent = db.Column(db.String(64))
+    env = db.Column(db.String(128))
+    duration = db.Column(db.Integer)
+    reserved_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<history {}>'.format(self.agent)

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>
+            <nav class= "welcome">
+                <div>Enter Agent Details</div>
+            </nav>
+         </h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.agent_name.label(class_="agent_p1")}}
+        {{ form.agent_name(class_="agent_p1_text", size=20) }}
+        <br>
+        {{ form.agent_platform.label(class_="agent_p2")}}
+        {{ form.agent_platform(class_="agent_p2_text", size=30) }}
+        <br>
+        {{ form.agent_user.label(class_="agent_p3")}}
+        {{ form.agent_user(class_="agent_p3_text")}}
+        <br>
+        {{ form.agent_password.label(class_="agent_p4")}}
+        {{ form.agent_password(class_="agent_p4_text")}}
+        <br>
+        {{ form.agent_serial.label(class_="agent_p5")}}
+        {{ form.agent_serial(class_="agent_p5_text")}}
+        <br>
+        {{ form.agent_access.label(class_="agent_p6")}}
+        {{ form.agent_access(class_="agent_p6_text")}}
+        <br>
+        {{ form.agent_env.label(class_="agent_p7")}}
+        {{ form.agent_env(class_="agent_p7_text")}}
+        <br>
+        {{ form.agent_ipaddr.label(class_="agent_p8")}}
+        {{ form.agent_ipaddr(class_="agent_p8_text")}}
+        <br>
+        {{ form.agent_location.label(class_="agent_p9")}}
+        {{ form.agent_location(class_="agent_p9_text")}}
+        <br>
+        {{ form.agent_command_line_access.label(class_="agent_p10")}}
+        {{ form.agent_command_line_access(class_="agent_p10_text")}}
+
+    {{ form.submit(class_="agent_button" )}}
+
+    </form>
+{% endblock %}

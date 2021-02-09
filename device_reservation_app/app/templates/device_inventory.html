@@ -1,41 +1,90 @@
-{% extends "base.html" %}
+<html>
+    <head>
+        <style>
+        table, th, td {
+          border: 2px solid black;
+        }
 
-{% block content %}
+        table {
+          width: 75%;
+          border-collapse: collapse;
+          position: absolute;
+            width: 300px;
+            height: 20px;
+            left:   300px;
+            top:    200px;
+        }
+        th {
+          width: 70px;
+        }
+
+        td {
+          text-align: center;
+        }
+        th, td {
+          padding: 15px;
+        }
+        </style>
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
+        {% if title %}
+        <title>{{ title }} - Device Reservation</title>
+        {% else %}
+        <title>Welcome to Device Reservation</title>
+        {% endif %}
+    </head>
+    <body>
+        <nav class="panel">
+        <div>
+            <a href="{{ url_for ('main.index') }}">Home</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for ('auth.login') }}">Login</a>
+            {% else %}
+            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for ('auth.logout') }}">Logout</a>
+            {% endif %}
+        </div>
+        </nav>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </body>
     <h1>
             <nav class= "welcome">
-                <div>Enter Agent Details</div>
+                <div>Device Inventory</div>
             </nav>
-         </h1>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.agent_name.label()}}
-        {{ form.agent_name(size=20) }}
-        <br>
-        {{ form.agent_user.label()}}
-        {{ form.agent_user()}}
-        <br>
-        {{ form.agent_password.label()}}
-        {{ form.agent_password()}}
-        <br>
-        {{ form.agent_serial.label()}}
-        {{ form.agent_serial()}}
-        <br>
-        {{ form.agent_access.label()}}
-        {{ form.agent_access()}}
-        <br>
-        {{ form.agent_env.label()}}
-        {{ form.agent_env()}}
-        <br>
-        {{ form.agent_ipaddr.label()}}
-        {{ form.agent_ipaddr()}}
-        <br>
-        {{ form.agent_location.label()}}
-        {{ form.agent_location()}}
-        <br>
-        {{ form.agent_command_line_access.label()}}
-        {{ form.agent_command_line_access()}}
-
-    {{ form.submit(class_="rbutton" )}}
-
-    </form>
-{% endblock %}
+     </h1>
+    <table class="inv_table" border="1" >
+        <thead>
+        <tr>
+            <th>Agent</th>
+            <th>Platform</th>
+            <th>Environment</th>
+            <th>UI_Access</th>
+            <th>Location</th>
+            <th>Reservation Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <td>{{agent.a_name}}</td>
+                <td>{{agent.a_platform}}</td>
+                <td>{{agent.a_env}}</td>
+                <td>{{agent.a_access}}</td>
+                <td>{{agent.a_location}}</td>
+                {% if agent.a_owner %}
+                <td>Reserved</td>
+                {% else %}
+                <td>Available</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+</html>

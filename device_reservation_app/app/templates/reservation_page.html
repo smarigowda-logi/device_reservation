@@ -8,14 +8,31 @@
             </nav>
          </h1>
     <form method="POST" action="reserve_device">
-        {{ form.hidden_tag() }}
-        {{ form.platform.label(class_="rtarget" )}}
-        {{ form.platform(class_="rtarget_text_box", size=20) }}
-
-        {{ form.duration.label(class_="duration" )}}
-        {{ form.duration (class_="duration_text_box" )}}
-
-    {{ form.submit(class_="rbutton" )}}
+        <nav class="rtarget">
+            <div>Select Platform</div>
+        </nav>
+        <select class="rtarget_text_box" name="platform" id="platform" >
+        {% for p in platform_list %}
+            <option value="{{ p }}">{{ p }}</option>
+        {% endfor %}
+        </select>
+        <br>
+        <nav class="duration">
+            <div>Duration</div>
+        </nav>
+        <select class="duration_text_box1" name="day" id="day">
+        {% for d in days %}
+            <option value="{{ d }}">{{ d }}</option>
+        {% endfor %}
+        </select>
+        <br>
+        <select class="duration_text_box2" name="hour" id="hour">
+        {% for h in hours %}
+            <option value="{{ h }}">{{ h }}</option>
+        {% endfor %}
+        </select>
+        <br>
+    <input class="rbutton" type="submit" value="Select Environment">
 
     </form>
 {% endblock %}
