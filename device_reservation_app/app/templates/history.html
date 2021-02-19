@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+     <div class= "jumbotron">
+         <h2 class="text-center">Reservation History</h2>
+    </div>
+
+        <table align="center" border="1" >
+        <thead align="center">
+        <tr>
+            <th align="center">  User  </th>
+            <th align="center">  Agent  </th>
+            <th align="center">  Environment  </th>
+            <th align="center">  Duration  </th>
+            <th align="center">  Reserved Time  </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for h in history %}
+            <tr>
+                <td align="center">{{h.user}}</td>
+                <td align="center">{{h.agent}}</td>
+                <td align="center">{{h.env}}</td>
+                <td align="center">{{h.duration}}</td>
+                <td align="center">{{h.reserved_time}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+<br><br>
+{% endblock %}

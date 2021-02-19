@@ -1,39 +1,23 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
-    <nav class= "welcome">
-        <h1><div>Welcome to Device Inventory Page</div></h1>
-    </nav>
-    <nav class="signin">
-    <h1>Please login to access this page</h1>
-    </nav>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <nav class="login_param1">
+{% block app_content %}
+
+    <div class="row">
+        <div class="col-sm-3 col-md-4">
+            <h4>Welcome to Device Reservation System</h4>
+            <h4>Log in to your account</h4>
+            {{ wtf.quick_form(form) }}
+            <br>
+        <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-            {% for error in form.username.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
+            Forgot Your Password?
+            <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a>
         </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-            {% for error in form.password.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.remember_me() }} {{ form.remember_me.label }}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
-        </nav>
-    </form>
-    <nav class="new_user">
-    <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register</a></p>
-    <p>Forgot your password?<a href="{{ url_for('auth.reset_password_request') }}">Click to Reset</a></p>
-    </nav>
+        </div>
+        <div class="col-sm-3 offset-sm-2 col-md-4 offset-md-0">
+            <img src="https://i.postimg.cc/KjCRJ1Bm/KDS.png">
+        </div>
+    </div>
+
 {% endblock %}

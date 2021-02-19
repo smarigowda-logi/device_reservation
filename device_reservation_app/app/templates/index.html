@@ -1,36 +1,154 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    <header>
-            <nav class= "welcome">
-                <div>Welcome to Device Inventory Page</div>
-            </nav>
-         </header>
+    {% if form %}
+    {{ wtf.quick_form(form) }}
+    <br>
+    {% endif %}
+
+    <div class= "jumbotron">
+
+
+    <h2 class="text-center">Current Reservation Status</h2>
+
+    <main role="main" class="container-fluid"><center>
+    <div class="row text-center justify-content-center">
+    <div class="col-12">
+        {% if agents.count() > 0 %}
+        <h3 class="text-center">Below are your assigned reservations</h3>
+        <form method="post" action="">
+        <table align="center" border="1">
+            <thead>
+            <tr>
+                <th>Select Agent</th>
+                <th>Agent</th>
+                <th>Platform</th>
+                <th>Environment</th>
+                <th>Duration(hours)</th>
+                <th>Reserved time</th>
+            </tr>
+            </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <td><input type="radio" name=options value="{{agent.a_name}}" id="{{agent.a_name}}"/></td>
+                <td>{{agent.a_name}}</td>
+                <td>{{agent.a_platform}}</td>
+                <td>{{agent.a_env}}</td>
+                <td>{{agent.a_duration}}</td>
+                <td>{{agent.a_last_reserved}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+            <br>
+            <input class="btn btn-primary btn-sm" type="submit" name="release" value="Release Agent">
+            <input class="btn btn-primary btn-sm" type="submit" name="""extvalue="Extend reservation">
+        </form>
+        {% else %}
+        <p><h3 align="center">No Current Active Reservation</h3></p><br>
+        {% endif %}
+        <br><br>
+        {% if reservation.count() > 0 %}
+        <h3 class="text-center">Below are your queued reservations</h3>
+
+        <table align="center" border="1" >
+        <thead>
+        <tr>
+            <th>Platform</th>
+            <th>Environment</th>
+            <th>Duration(hours)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in reservation %}
+            <tr>
+                <td>{{r.platform}}</td>
+                <td>{{r.env}}</td>
+                <td>{{r.duration}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+    </div></div></center></main>
+    </div>
+    <main role="main" class="container-fluid">
+    <div class="row justify-content-center">
+     <div class="row text-center">
     <form action="reserve_device">
-    <input class="button1" type="submit" value="Reserve Device">
+          <div class="col-sm-6 col-md-4 align=center">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Reserve Device</h3>
+                <p>Select this option to reserve a device for manual testing</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Reserve Device"></p>
+              </div>
+            </div>
+          </div>
     </form>
-    <nav class= "help_text1">
-        <div>Select this option if you need to reserve a device for manual testing </div>
-    </nav>
     <form action="job_schedule">
-    <input class="button2" type="submit" value="Schedule Jenkins Job">
+          <div class="col-sm-6 col-md-4 align=center">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Job Schedule</h3>
+                <p>Select this option to configure and run jenkins job</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Schedule Jenkins Job"></p>
+              </div>
+            </div>
+          </div>
     </form>
-    <nav class= "help_text2">
-        <div>Select this option to run jenkins job</div>
-    </nav>
-    <form action="device_inventory">
-        <input class="button3" type="submit" value="Device Inventory View">
+     <form action="device_inventory">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Device Inventory View</h3>
+                <p>Select this option to view current Device Inventory snapshot</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Device Inventory View"></p>
+              </div>
+            </div>
+          </div>
     </form>
-    <nav class= "help_text3">
-        <div>Select this option to view current Device Inventory snapshot</div>
-    </nav>
-    <form action="add_agents">
-        <input class="button4" type="submit" value="Add Agent ">
+     </div>
+    <div class="row text-center">
+    {% if (current_user.administrator == 'Admin') or (current_user.administrator == 'Super Admin') %}
+    <form action="manage_agents">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Manage Reservation System</h3>
+                <p>Select this option to Manage Reservation System</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Manage Reservation"></p>
+              </div>
+            </div>
+          </div>
     </form>
-    <nav class= "help_text4">
-        <div>Select this option to add agents to Inventory</div>
-    </nav>
-
-
+    {% endif %}
+    {% if current_user.administrator == 'Super Admin' %}
+    <form action="manage_user_access">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Manage User </h3>
+                <p>Select this option to Manage User Access</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Manage User"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    <form action="manage_rig">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Manage Rig </h3>
+                <p>Select this option to Manage Rigs </p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Manage Rigs"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    {% endif %}
+    </div>
+    </div></main>
 {% endblock %}

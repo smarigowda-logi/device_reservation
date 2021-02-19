@@ -151,7 +151,6 @@ class Reservation(db.Model):
 class Agentprofile(db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
-    a_user_id = db.Column(db.Integer)
     a_name = db.Column(db.String(64), unique=True)
     a_platform = db.Column(db.String(64))
     a_user = db.Column(db.String(64))
@@ -168,6 +167,16 @@ class Agentprofile(db.Model):
 
     def __repr__(self):
         return '<Agent {}>'.format(self.a_name)
+
+
+class Rigdescriptor(db.Model):
+    __searchable__ = ['body']
+    id = db.Column(db.Integer, primary_key=True)
+    rig = db.Column(db.String(64))
+    rig_desc = db.Column(db.String(128))
+
+    def __repr__(self):
+        return '<Rig {}>'.format(self.rig)
 
 
 class History(db.Model):

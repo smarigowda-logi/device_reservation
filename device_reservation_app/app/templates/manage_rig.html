@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+     <div class= "jumbotron">
+                <h1 class="text-center">Manage Rigs</h1>
+    </div>
+    <div class="row text-center">
+    <form action="add_rig">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Add Rig</h3>
+                <p>Select this option to Add Rig to Inventory</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Add Rig"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    <form action="delete_rig">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Delete Rig</h3>
+                <p>Select this option to Delete Rig from Inventory</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Delete Rig"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    <form action="edit_rig">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Edit Rig</h3>
+                <p>Select this option to Edit Rig Description</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Edit Rig"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    </div>
+{% endblock %}

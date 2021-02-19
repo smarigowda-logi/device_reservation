@@ -2,11 +2,11 @@
 
 {% block content %}
     <div class= "jumbotron">
-                <h3 class="text-center">Select environment values</h3>
+                <h3 class="text-center">Add environment</h3>
     </div>
     <form action="" method="post">
-
-
+    <main role="main" class="container-fluid">
+    <div class="row text-center justify-content-center">
     <table class="table">
     <thead align="center">
     <tr align="center">
@@ -16,11 +16,11 @@
     </tr>
     </thead>
     <tbody>
-    {% for env,desc in env_var.items() %}
+    {% for key in env_hash.keys() %}
     <tr>
-        <td scope="col"><input id="{{ env }}" type="checkbox" name="{{ env }}"></td>
-        <td>{{ env }}</td>
-        <td>{{ desc}}</td>
+        <td scope="col"><input id="{{ key }}" type="checkbox" name="{{ key }}"></td>
+        <td>{{ key }}</td>
+        <td>{{ env_hash[key] }}</td>
     </tr>
     {% endfor %}
     </table>
@@ -29,8 +29,9 @@
     <div class="row justify-content-center">
         <div class="col-12">
      <div class="row text-center">
-    <input class="btn btn-secondary" type="submit" value="Reserve">
+    <input class="btn btn-secondary" type="submit" value="Add Rigs to Agent">
      </div></div></div>
     </main>
+    </div></main>
     </form>
 {% endblock %}

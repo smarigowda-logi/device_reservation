@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+    <div class= "jumbotron">
+        <h2 class="text-center">Manage User Access</h2>
+    </div>
+    <form method="POST" action="">
+    <main role="main" class="container-fluid">
+        <div class="row text-center justify-content-center">
+    <table align="center" border="1" >
+        <thead align="center">
+        <tr align="center">
+            <th align="center">  User  </th>
+            <th align="center">  Access  </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td align="center">{{user.username}}</td>
+                <td align="center"><select class="form-select form-select-lg mb-3 align=center" name={{user.username}} id="{{user.username}}">
+                    <option selected>{{ user.administrator }}</option>
+                    <option value="General">General</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Super Admin">Super Admin</option>
+                    </select>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        <br>
+        <input class="btn btn-secondary btn-sm" type="submit" value="Submit">
+            </div>
+        </main>
+    </form>
+{% endblock %}
+

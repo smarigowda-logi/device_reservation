@@ -55,8 +55,35 @@ class AgentEntry(FlaskForm):
     agent_password = StringField('Agent Password', [DataRequired()])
     agent_serial = StringField('DNS Name', [DataRequired()])
     agent_access = StringField('UI Access', [DataRequired()])
-    agent_env = StringField('Environment/Rigs', [DataRequired()])
     agent_ipaddr = StringField('IP Address', [DataRequired()])
     agent_location = StringField('Location', [DataRequired()])
     agent_command_line_access = StringField('Command Line Access', [DataRequired()])
     submit = SubmitField('Add Agent')
+
+
+class EditAgent(FlaskForm):
+    agent_name = StringField('Agent name', [DataRequired()])
+    agent_platform = StringField('Agent Platform', [DataRequired()])
+    agent_user = StringField('Agent Username', [DataRequired()])
+    agent_password = StringField('Agent Password', [DataRequired()])
+    agent_serial = StringField('DNS Name', [DataRequired()])
+    agent_access = StringField('UI Access', [DataRequired()])
+    agent_ipaddr = StringField('IP Address', [DataRequired()])
+    agent_location = StringField('Location', [DataRequired()])
+    agent_command_line_access = StringField('Command Line Access', [DataRequired()])
+    submit = SubmitField('Edit Agent')
+
+    def __init__(self, *args, **kwargs):
+        super(EditAgent, self).__init__(*args, **kwargs)
+
+
+class RigEntry(FlaskForm):
+    rig_name = StringField('Rig name', [DataRequired()])
+    rig_description = StringField('Rig Description ', [DataRequired()])
+    submit = SubmitField('Add Rig')
+
+
+class EditRig(FlaskForm):
+    rig = StringField('Rig name', [DataRequired()])
+    rig_desc = StringField('Rig Description ', [DataRequired()])
+    submit = SubmitField('Edit Rig')

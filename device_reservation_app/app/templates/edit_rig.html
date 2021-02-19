@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class= "jumbotron">
+                <h3 class="text-center">Edit Rig</h3>
+        </div>
+        <form method="post" action="">
+        <main role="main" class="container-fluid">
+        <div class="row text-center justify-content-center">
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Select Rig</th>
+                <th>Rig</th>
+                <th>Rig Description</th>
+            </tr>
+            </thead>
+        <tbody>
+        {% for rig in rigs %}
+            <tr>
+                <td><input type="radio" name=options value="{{rig.rig}}" id="{{rig.rig}}"/></td>
+                <td>{{rig.rig}}</td>
+                <td>{{rig.rig_desc}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+             <br>
+            <input class="btn btn-secondary" type="submit" value="Edit Rig">
+        </div></main>
+        </form>
+{% endblock %}

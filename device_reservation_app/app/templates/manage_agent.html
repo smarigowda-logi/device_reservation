@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+     <div class= "jumbotron">
+                <h1 class="text-center">Manage Reservation System</h1>
+    </div>
+    <div class="row text-center">
+    <form action="add_agents">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Add Agent</h3>
+                <p>Select this option to Add Agent to Inventory</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Add Device"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    <form action="delete_agent">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Delete Agent</h3>
+                <p>Select this option to Delete Agent from Inventory</p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Delete Device"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    <form action="edit_agent">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3>Edit Agent</h3>
+                <p>Select this option to Edit Agent </p>
+                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Edit Device"></p>
+              </div>
+            </div>
+          </div>
+    </form>
+    </div>
+{% endblock %}

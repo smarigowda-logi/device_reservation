@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class= "jumbotron">
+                <h3 class="text-center">Edit Agent</h3>
+        </div>
+        <form method="post" action="">
+        <main role="main" class="container-fluid">
+        <div class="row text-center justify-content-center">
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Select Agent</th>
+                <th>Agent</th>
+                <th>Platform</th>
+                <th>Environment</th>
+                <th>UI Access</th>
+                <th>Serial</th>
+                <th>IP Address</th>
+                <th>Location</th>
+            </tr>
+            </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <td><input type="radio" name=options value="{{agent.a_name}}" id="{{agent.a_name}}"/></td>
+                <td>{{agent.a_name}}</td>
+                <td>{{agent.a_platform}}</td>
+                <td>{{agent.a_env}}</td>
+                <td>{{agent.a_access}}</td>
+                <td>{{agent.a_serial}}</td>
+                <td>{{agent.a_ipaddr}}</td>
+                <td>{{agent.location}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+             <br>
+            <input class="btn btn-secondary" type="submit" value="Edit Agent">
+        </div></main>
+        </form>
+    </nav>
+{% endblock %}
