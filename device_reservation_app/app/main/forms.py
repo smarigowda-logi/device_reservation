@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import widgets, SelectMultipleField, StringField, TextField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
-from app.models import User
+from app.models import User, Agentprofile, Rigdescriptor, Reservation
 
 
 class EditProfileForm(FlaskForm):
@@ -27,20 +27,6 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError('Please use a different email.')
 
 
-class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
-
-
-class EnvironmentForm(FlaskForm):
-
-    env_comp = ['HDMI', 'TAP', 'USB', 'Remote', 'Windows', 'Linux', 'MAC']
-    env_string = '\r\n'.join(env_comp)
-    list_of_files = env_string.split()
-    files = [(x, x) for x in list_of_files]
-    env_data = MultiCheckboxField('Label', choices=files)
-
-
 class ReserveDevice(FlaskForm):
     platform = StringField('Platform', [DataRequired()])
     duration = StringField('Duration', [DataRequired()])
@@ -59,6 +45,11 @@ class AgentEntry(FlaskForm):
     agent_location = StringField('Location', [DataRequired()])
     agent_command_line_access = StringField('Command Line Access', [DataRequired()])
     submit = SubmitField('Add Agent')
+
+    def validate_agent_name(self, agent_name):
+        agent = Agentprofile.query.filter_by(a_name=agent_name.data).first()
+        if agent is not None:
+            raise ValidationError('Agent with similar name already exists in Inventory. Please use different agent name')
 
 
 class EditAgent(FlaskForm):
@@ -81,6 +72,11 @@ class RigEntry(FlaskForm):
     rig_name = StringField('Rig name', [DataRequired()])
     rig_description = StringField('Rig Description ', [DataRequired()])
     submit = SubmitField('Add Rig')
+
+    def validate_rig_name(self, rig_name):
+        rig = Rigdescriptor.query.filter_by(rig=rig_name.data).first()
+        if rig is not None:
+            raise ValidationError('Rig with similar name already exists in Inventory. Please use different Rig name')
 
 
 class EditRig(FlaskForm):

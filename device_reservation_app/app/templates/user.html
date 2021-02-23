@@ -4,18 +4,13 @@
      <div class= "jumbotron">
                 <h4>Hello {{ user.username }} </h4>
                 {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-                <h2 class="text-center">Current Request Status</h2>
+                <h2 class="text-center">Here is your reservation history</h2>
     </div>
     <main role="main" class="container-fluid">
     <div class="row text-center justify-content-center">
-    <div class="col-12">
-        {% if agents.count() > 0 %}
-        <h3 class="text-center">Below are your assigned reservations</h3>
-        <form method="post" action="">
-        <table align="center" border="1">
+        <table class="table table-bordered table-hover table-dark table-sm">
             <thead>
             <tr>
-                <th>Select Agent</th>
                 <th>Agent</th>
                 <th>Platform</th>
                 <th>Environment</th>
@@ -24,49 +19,16 @@
             </tr>
             </thead>
         <tbody>
-        {% for agent in agents %}
+        {% for history in user_history %}
             <tr>
-                <td><input type="checkbox" name=agent_list value="{{agent.a_name}}" /></td>
-                <td>{{agent.a_name}}</td>
-                <td>{{agent.a_platform}}</td>
-                <td>{{agent.a_env}}</td>
-                <td>{{agent.a_duration}}</td>
-                <td>{{agent.a_last_reserved}}</td>
+                <td>{{history.agent}}</td>
+                <td>{{history.platform}}</td>
+                <td>{{history.env}}</td>
+                <td>{{history.duration}}</td>
+                <td>{{history.reserved_time}}</td>
             </tr>
         {% endfor %}
         </tbody>
         </table>
-            <br>
-            <input class="btn btn-secondary btn-sm" type="submit" value="Release Agent">
-        </form>
-        {% else %}
-        <p><h3 align="center">There are no devices reserved for you</h3></p><br>
-        {% endif %}
-        <br><br>
-        {% if reservation.count() > 0 %}
-        <h3 class="text-center">Below are your queued reservations</h3>
-
-        <table align="center" border="1" >
-        <thead>
-        <tr>
-            <th>Platform</th>
-            <th>Environment</th>
-            <th>Duration(hours)</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for r in reservation %}
-            <tr>
-                <td>{{r.platform}}</td>
-                <td>{{r.env}}</td>
-                <td>{{r.duration}}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        </table>
-        {% else %}
-        <p><h3 align="center">There are no device reservation in queue</h3></p><br>
-        {% endif %}
-        <p><a href="{{ url_for('main.edit_profile') }}">Edit your profile</a></p>
-    </div></div></main>
+    </div></main>
 {% endblock %}

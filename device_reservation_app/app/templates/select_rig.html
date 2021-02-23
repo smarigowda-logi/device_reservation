@@ -7,20 +7,20 @@
     <form action="" method="post">
     <main role="main" class="container-fluid">
     <div class="row text-center justify-content-center">
-    <table class="table">
-    <thead align="center">
+    <table class="table table-bordered table-hover table-dark table-sm">
+    <thead class="thead-dark">
     <tr align="center">
-      <th scope="col"></th>
-      <th scope="col">Rig/Env</th>
-      <th scope="col">Description</th>
+      <th class="text-center"></th>
+      <th>Rig/Env</th>
+      <th>Description</th>
     </tr>
     </thead>
     <tbody>
     {% for key in env_hash.keys() %}
     <tr>
-        <td scope="col"><input id="{{ key }}" type="checkbox" name="{{ key }}"></td>
-        <td>{{ key }}</td>
-        <td>{{ env_hash[key] }}</td>
+        <td class="text-center"><input id="{{ key }}" type="checkbox" name="{{ key }}"></td>
+        <td class="text-center">{{ key }}</td>
+        <td class="text-center">{{ env_hash[key] }}</td>
     </tr>
     {% endfor %}
     </table>

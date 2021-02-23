@@ -30,7 +30,7 @@ class ReservationHelper:
                 for agent in agent_list:
                     agent_stat = Agentprofile.query.filter_by(a_name=agent).first()
                     db.session.refresh(agent_stat)
-                    print(agent_stat.a_owner, agent, reserve_agent.id)
+                    # print(agent_stat.a_owner, agent, reserve_agent.id)
                     if not agent_stat.a_owner and not agent_found:
                         agent_stat.a_owner = username
                         agent_stat.a_duration = reserve_agent.duration
@@ -41,20 +41,29 @@ class ReservationHelper:
                         db.session.commit()
 
                         slack_bot.post_message_to_slack('Agent {} reserved under your name for {} hours.'
-                                                        ' Please release the agent if you are done '
-                                                        'early'.format(agent_stat.a_name, agent_stat.a_duration ),
-                                                        username)
-                        history = History(user=username, agent=agent_stat.a_name, env=agent_stat.a_env, duration=agent_stat.a_duration)
+                                                        ' Below are the agent details: \n IP Address: {} \n Serial'
+                                                        ' number: {} \n UI_Access: {} \nUsername: {} \n '
+                                                        'Password:{} \n'.format(agent_stat.a_name, agent_stat.a_duration,
+                                                                                agent_stat.a_ipaddr, agent_stat.a_serial,
+                                                                                agent_stat.a_access, agent_stat.a_user,
+                                                                                agent_stat.a_pass), username)
+                        history = History(user=username, agent=agent_stat.a_name, platform=agent_stat.a_platform, env=agent_stat.a_env, duration=agent_stat.a_duration)
                         db.session.add(history)
                         db.session.commit()
                         agent_found = True
-                        total_time = datetime.utcnow() + timedelta(seconds=agent_stat.a_duration)
+                        total_time = datetime.utcnow() + timedelta(hours=agent_stat.a_duration)
 
                         while datetime.utcnow() < total_time:
                             print(total_time, datetime.utcnow())
-                            time.sleep(int(agent_stat.a_duration))
+                            agent_stat = Agentprofile.query.filter_by(a_name=agent).first()
+                            db.session.refresh(agent_stat)
+                            if agent_stat.a_owner != username:
+                                break
+                            print(agent_stat.a_duration)
+                            time.sleep(10)
                         agent_stat.a_owner = ''
                         agent_stat.a_duration = 0
+                        agent_stat.a_last_reserved = ''
                         db.session.commit()
 
     def free_agent(self, app, username):
@@ -63,12 +72,14 @@ class ReservationHelper:
             for agent in agents:
                 if agent.a_owner:
                     reserved_time = agent.a_last_reserved
+                    print(reserved_time)
                     reserved_datetime = datetime.strptime(reserved_time, '%m/%d/%Y, %H:%M:%S')
-                    expire_time = reserved_datetime + timedelta(seconds=agent.a_duration)
+                    expire_time = reserved_datetime + timedelta(hours=agent.a_duration)
                     print(expire_time, datetime.utcnow())
                     if expire_time < datetime.utcnow():
                         agent.a_owner = ''
                         agent.a_duration = 0
+                        agent.a_last_reserved = ''
                         db.session.commit()
             reservations = Reservation.query.all()
             free_agents = Agentprofile.query.filter_by(a_owner='').all()
@@ -84,5 +95,18 @@ class ReservationHelper:
                             time1 = datetime.utcnow()
                             str_time = time1.strftime("%m/%d/%Y, %H:%M:%S")
                             free_agent.a_last_reserved = str_time
+                            slack_bot.post_message_to_slack('Agent {} reserved under your name for {} hours.'
+                                                            ' Below are the agent details: \n IP Address: {} \n Serial'
+                                                            ' number: {} \n UI_Access: {} \nUsername: {} \n '
+                                                            'Password:{} \n'.format(free_agent.a_name,
+                                                                                    free_agent.a_duration,
+                                                                                    free_agent.a_ipaddr,
+                                                                                    free_agent.a_serial,
+                                                                                    free_agent.a_access,
+                                                                                    free_agent.a_user,
+                                                                                    free_agent.a_pass), username)
+                            history = History(user=username, agent=free_agent.a_name, platform=free_agent.a_platform,
+                                              env=free_agent.a_env, duration=free_agent.a_duration)
+                            db.session.add(history)
                             db.session.delete(reservation)
                             db.session.commit()

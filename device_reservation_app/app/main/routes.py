@@ -36,12 +36,35 @@ def index():
         agent = request.form['options']
         print(agent)
         agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
-        agent_obj.a_owner = ''
-        agent_obj.a_duration = 0
-        agent_obj.a_last_reserved = ''
+        if request.form['action'] == 'Release Reservation':
+            agent_obj.a_owner = ''
+            agent_obj.a_duration = 0
+            agent_obj.a_last_reserved = ''
+            db.session.commit()
+            return redirect(url_for('main.index'))
+        elif request.form['action'] == 'Extend Reservation':
+            return redirect(url_for('main.extend', agent=agent))
+    return render_template('index.html', title='Home', user=user, reservation=reservation, agents=agents)
+
+
+@bp.route('/queue', methods=['POST', 'GET'])
+@login_required
+def queue():
+    if request.method == 'POST':
+        queue_detail = request.form['q_options']
+        char = '}{\''
+        for c in char:
+            queue_detail = queue_detail.replace(c, '')
+        print(queue_detail)
+        platform, env = str(queue_detail).split(':')[0], str(queue_detail).split(':')[1]
+        print('***********')
+        print(platform.strip())
+        print(env.strip())
+        r = Reservation.query.filter_by(platform=platform.strip(), env=env.strip()).first()
+        print(r)
+        db.session.delete(r)
         db.session.commit()
         return redirect(url_for('main.index'))
-    return render_template('index.html', title='Home', user=user, reservation=reservation, agents=agents)
 
 
 @bp.route('/extend/<agent>', methods=['POST', 'GET'])
@@ -56,13 +79,9 @@ def extend(agent):
     if request.method == 'POST':
         day = 0 if (request.form.get('day') == '') else int(request.form.get('day'))
         hour = 0 if (request.form.get('hour') == '') else int(request.form.get('hour'))
-        duration = ((day * 24) + hour) * 3600
+        duration = (day * 24) + hour
         agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
-        reserved_time = agent_obj.a_last_reserved
-        reserved_datetime = datetime.strptime(reserved_time, '%m/%d/%Y, %H:%M:%S')
-        expire_time = reserved_datetime + timedelta(hours=agent_obj.a_duration)
-        time_left = expire_time - datetime.utcnow()
-        agent_obj.a_duration = time_left + duration
+        agent_obj.a_duration = int(agent_obj.a_duration) + duration
         db.session.commit()
         return redirect(url_for('main.index', username=current_user.username))
     return render_template('extend.html', agent=agent, days=days, hours=hours)
@@ -79,19 +98,8 @@ def history():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    reservation = Reservation.query.filter_by(r_user=user.username)
-    agents = Agentprofile.query.filter_by(a_owner=user.username)
-    if request.method == 'POST':
-        agent_list = request.form.getlist('agent_list')
-        print(agent_list)
-        for agent in agent_list:
-            agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
-            agent_obj.a_owner = ''
-            agent_obj.a_duration = 0
-            agent_obj.a_last_reserved = ''
-            db.session.commit()
-        return redirect(url_for('main.user', username=current_user.username))
-    return render_template('user.html', user=user, reservation=reservation, agents=agents)
+    user_history = History.query.filter_by(user=username)
+    return render_template('user.html', user=user, user_history=user_history)
 
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
@@ -109,6 +117,11 @@ def edit_profile():
         form.email.data = current_user.email
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+
+@bp.route('/job_schedule')
+def contact():
+    return render_template('contact.html')
 
 
 @bp.route('/job_schedule')
@@ -134,7 +147,7 @@ def reserve_device():
         print(request.form.get('platform'))
         day = 0 if (request.form.get('day') == '') else int(request.form.get('day'))
         hour = 0 if (request.form.get('hour') == '') else int(request.form.get('hour'))
-        duration = ((day * 24) + hour) * 3600
+        duration = (day * 24) + hour
         session['rtc'] = {'platform': request.form.get('platform'), 'duration': duration}
         next_page = request.args.get('next')
         if not next_page or next_page.startswith('/'):
@@ -161,7 +174,7 @@ def manage_agents():
 @login_required
 def add_agents():
     form = AgentEntry()
-    if request.method == 'POST':
+    if form.validate_on_submit():
         session['agent'] = {'a_name': form.agent_name.data,'a_platform': form.agent_platform.data,
                             'a_user': form.agent_user.data,'a_pass': form.agent_password.data,
                              'a_serial': form.agent_serial.data, 'a_access': form.agent_access.data,
@@ -183,16 +196,16 @@ def add_agent_env():
             request.form.getlist(key)) > 1 else request.form.getlist(key)[0])
                     for key in request.form.keys())
         env_list = [key for key in data.keys()]
-        #agent_dict = session['agent_dict']
-        #env = Agentprofile.query.filter_by(a_name=session['agent_name']).first()
+        env = ' ,'.join(env_list) + ' '
         agent = Agentprofile(a_name=session['agent']['a_name'], a_platform=session['agent']['a_platform'],
                              a_user=session['agent']['a_user'],
                              a_pass=session['agent']['a_pass'],
                              a_serial=session['agent']['a_serial'], a_access=session['agent']['a_access'],
                              a_ipaddr=session['agent']['a_ipaddr'], a_location=session['agent']['a_location'],
-                             a_command_line=session['agent']['a_command_line'], a_env=env_list)
+                             a_command_line=session['agent']['a_command_line'], a_env=env)
         db.session.add(agent)
         db.session.commit()
+        flash('Agent ' + session['agent']['a_name'] + ' successfully added to inventory')
         return redirect(url_for('main.manage_agents'))
     return render_template('select_rig.html', env_hash=env_hash)
 
@@ -205,9 +218,13 @@ def delete_agent():
         agent_list = request.form.getlist('agent_list')
         for agent in agent_list:
             agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
-            db.session.delete(agent_obj)
-            db.session.commit()
-        return redirect(url_for('main.delete_agent'))
+            if agent_obj.a_owner == "":
+                db.session.delete(agent_obj)
+                db.session.commit()
+                flash('Selected agents successfully deleted from inventory')
+            else:
+                flash('Agent ' + agent + ' is being used by ' + agent_obj.a_owner + '. Try deleting agent once released')
+        return redirect(url_for('main.manage_agents'))
     return render_template('delete_agent.html', agents=agents)
 
 
@@ -275,9 +292,11 @@ def edit_agent_env(edit_agent_name):
             request.form.getlist(key)) > 1 else request.form.getlist(key)[0])
                     for key in request.form.keys())
         env_list = [key for key in data.keys()]
-        agent.a_env = ','.join(env_list)
+        a_env = ', '.join(env_list)
+        agent.a_env = agent.a_env + ',' + a_env
         db.session.commit()
-        return redirect(url_for('main.edit_agent'))
+        flash('Changes to agent ' + agent.a_name + ' saved to inventory')
+        return redirect(url_for('main.manage_agents'))
     return render_template('edit_agent_env.html', current_rig=current_env, env_hash=env_hash)
 
 
@@ -291,10 +310,11 @@ def manage_rig():
 @login_required
 def add_rig():
     form = RigEntry()
-    if request.method == 'POST':
+    if form.validate_on_submit():
         rig = Rigdescriptor(rig=form.rig_name.data, rig_desc=form.rig_description.data)
         db.session.add(rig)
         db.session.commit()
+        flash('Rig ' + form.rig_name.data + ' successfully added to inventory')
         return redirect(url_for('main.manage_rig'))
     return render_template('add_rig.html', form=form)
 
@@ -307,8 +327,16 @@ def delete_rig():
         rig_list = request.form.getlist('rig_list')
         for rig in rig_list:
             rig_obj = Rigdescriptor.query.filter_by(rig=rig).first()
+            agents = Agentprofile.query.filter(Agentprofile.a_env.contains(rig)).all()
+            agent_name = []
+            for agent in agents:
+                if agent.a_env.startswith(rig):
+                    agent.a_env = agent.a_env.replace(rig+' ,', '')
+                agent.a_env = agent.a_env.replace(rig + ' ', '').replace(',,', ',')
+                agent_name.append(agent.a_name)
             db.session.delete(rig_obj)
             db.session.commit()
+            flash('Deleted rig ' + rig_obj.rig + ' from inventory and agents ' + ','.join(agent_name))
         return redirect(url_for('main.manage_rig'))
     return render_template('delete_rig.html', rigs=rigs)
 
@@ -332,12 +360,12 @@ def edit_rig_detail(rig):
         rig_info.rig = form.rig.data
         rig_info.rig_desc = form.rig_desc.data
         db.session.commit()
+        flash('Changes saved for rig ' + rig_info.rig)
         return redirect(url_for('main.manage_rig'))
     elif request.method == 'GET':
         form.rig.data = rig_info.rig
         form.rig_desc.data = rig_info.rig_desc
     return render_template('edit_rig_detail.html', form=form)
-
 
 
 @bp.route('/manage_user_access', methods=['POST', 'GET'])
@@ -362,7 +390,6 @@ def get_env():
         for env in env_list:
             if env not in env_var.keys():
                 env = env.strip()
-                print(env)
                 if env:
                     rig = Rigdescriptor.query.filter_by(rig=env).first()
                     env_var[env] = rig.rig_desc
@@ -405,7 +432,7 @@ def reserve():
     app = current_app._get_current_object()
     Thread(target=reserve_obj.insert_agent, args=(app, reserve_agent.id, agent_list,
                                                   current_user.username)).start()
-    flash('Congratulations, your reservation request is received!. We will mail you your agent details shortly.')
+    flash('Your reservation request is received!. We will slack your agent details shortly.')
     return redirect(url_for('main.index'))
 
 

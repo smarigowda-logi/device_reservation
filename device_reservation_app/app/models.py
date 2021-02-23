@@ -58,12 +58,6 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
-# followers = db.Table(
-#         'followers', db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-#                      db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-# )
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True)
@@ -72,13 +66,6 @@ class User(UserMixin, db.Model):
     reserve = db.relationship('Reservation', backref='reserve_user', lazy='dynamic')
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     administrator = db.Column(db.String(32))
-    # followed = db.relationship(
-    #     'User', secondary=followers,
-    #     primaryjoin=(followers.c.follower_id == id),
-    #     secondaryjoin=(followers.c.followed_id == id),
-    #     backref=db.backref('followers', lazy='dynamic'),
-    #     lazy='dynamic'
-    #)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -92,24 +79,6 @@ class User(UserMixin, db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
-
-    # def follow(self, user):
-    #     if not self.is_following(user):
-    #         self.followed.append(user)
-    #
-    # def unfollow(self, user):
-    #     if self.is_following(user):
-    #         self.followed.remove(user)
-    #
-    # def is_following(self, user):
-    #     return self.followed.filter(
-    #         followers.c.followed_id == user.id).count > 0
-    #
-    # def followed_posts(self):
-    #     followed = Reservation.query.join(followers, (followers.c.followed_id == Reservation.user_id)).\
-    #         filter(followers.c.follower_id == self.id)
-    #     own = Reservation.query.filter_by(user_id=self.id)
-    #     return followed.union(own).order_by(Reservation.timestamp.desc())
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
@@ -172,7 +141,7 @@ class Agentprofile(db.Model):
 class Rigdescriptor(db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
-    rig = db.Column(db.String(64))
+    rig = db.Column(db.String(64), unique=True)
     rig_desc = db.Column(db.String(128))
 
     def __repr__(self):
@@ -183,6 +152,7 @@ class History(db.Model):
     __searchable__ = ['body']
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(64))
+    platform = db.Column(db.String(64))
     agent = db.Column(db.String(64))
     env = db.Column(db.String(128))
     duration = db.Column(db.Integer)

@@ -6,29 +6,29 @@
                 <h2 class="text-center">Device Inventory View</h2>
     </div>
 
-    <table align="center" border="1" >
-        <thead align="center">
+    <table class="table table-bordered table-hover table-dark table-sm">
+        <thead class="thead-dark">
         <tr>
-            <th align="center">  Agent  </th>
-            <th align="center">  Platform  </th>
-            <th align="center">  Environment  </th>
-            <th align="center">  UI_Access  </th>
-            <th align="center">  Location  </th>
-            <th align="center">  Reservation Status  </th>
+            <th class="text-center">  Agent  </th>
+            <th class="text-center">  Platform  </th>
+            <th class="text-center">  Environment  </th>
+            <th class="text-center">  UI_Access  </th>
+            <th class="text-center">  Location  </th>
+            <th class="text-center">  Reservation Status  </th>
         </tr>
         </thead>
         <tbody>
         {% for agent in agents %}
             <tr>
-                <td align="center">{{agent.a_name}}</td>
-                <td align="center">{{agent.a_platform}}</td>
-                <td align="center">{{agent.a_env}}</td>
-                <td align="center">{{agent.a_access}}</td>
-                <td align="center">{{agent.a_location}}</td>
+                <td class="text-center">{{agent.a_name}}</td>
+                <td class="text-center">{{agent.a_platform}}</td>
+                <td class="text-center">{{agent.a_env}}</td>
+                <td class="text-center">{{agent.a_access}}</td>
+                <td class="text-center">{{agent.a_location}}</td>
                 {% if agent.a_owner %}
-                <td align="center">Reserved</td>
+                <td class="text-center">Reserved</td>
                 {% else %}
-                <td align="center">Available</td>
+                <td class="text-center">Available</td>
                 {% endif %}
             </tr>
         {% endfor %}

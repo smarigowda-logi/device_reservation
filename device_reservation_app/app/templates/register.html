@@ -4,8 +4,17 @@
 {% block app_content %}
     <h1>Register</h1>
     <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
+        <div class="col-sm-3 col-md-4">
+            <form action="" method="POST">
+            {{ wtf.form_field(form.username, placeholder='SSO Username') }}
+            {{ wtf.form_field(form.email, placeholder='Email ID') }}
+            {{ wtf.form_field(form.password, placeholder='Password') }}
+            {{ wtf.form_field(form.password, placeholder='Repeat Password') }}
+            <input class="btn btn-primary" type="submit" value="Register">
+            </form>
+        </div>
+        <div class="col-sm-3 offset-sm-2 col-md-4 offset-md-0">
+            <img src="https://i.postimg.cc/KjCRJ1Bm/KDS.png">
         </div>
     </div>
 {% endblock %}

@@ -1,26 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class= "jumbotron">
+
+    <div class= "jumbotron"><center>
                 <h3 class="text-center">Select environment values</h3>
-    </div>
-    <form action="" method="post">
+
+    <form id="getenv" action="" method="post">
 
 
-    <table class="table">
+    <table class="table table-bordered table-hover table-dark table-sm">
     <thead align="center">
     <tr align="center">
-      <th scope="col"></th>
-      <th scope="col">Rig/Env</th>
-      <th scope="col">Description</th>
+      <th class="text-center"></th>
+      <th class="text-center">Rig/Env</th>
+      <th class="text-center">Description</th>
     </tr>
     </thead>
     <tbody>
     {% for env,desc in env_var.items() %}
     <tr>
-        <td scope="col"><input id="{{ env }}" type="checkbox" name="{{ env }}"></td>
-        <td>{{ env }}</td>
-        <td>{{ desc}}</td>
+        <td class="text-center"><input id="{{ env }}" type="checkbox" name="{{ env }}"></td>
+        <td class="text-center">{{ env }}</td>
+        <td class="text-center">{{ desc}}</td>
     </tr>
     {% endfor %}
     </table>
@@ -29,8 +30,46 @@
     <div class="row justify-content-center">
         <div class="col-12">
      <div class="row text-center">
-    <input class="btn btn-secondary" type="submit" value="Reserve">
+    <input class="btn btn-primary" type="submit" id="reserve" value="Reserve">
      </div></div></div>
     </main>
     </form>
+    </center>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const form = document.querySelector('#getenv');
+    const checkboxes = form.querySelectorAll('input[type=checkbox]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
+
+            checkValidity();
+        }
+    }
+
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if (checkboxes[i].checked) return true;
+        }
+
+        return false;
+    }
+
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'At least one checkbox must be selected.' : '';
+        firstCheckbox.setCustomValidity(errorMessage);
+    }
+
+    init();
+})();
+</script>
 {% endblock %}

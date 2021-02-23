@@ -7,20 +7,20 @@
         <form method="post" action="">
         <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
-        <table align="center" border="1">
-            <thead>
+        <table class="table table-bordered table-hover table-dark table-sm">
+            <thead class="thead-dark">
             <tr>
-                <th>Select Rig</th>
-                <th>Rig</th>
-                <th>Description</th>
+                <th class="text-center">Select Rig</th>
+                <th class="text-center">Rig</th>
+                <th class="text-center">Description</th>
             </tr>
             </thead>
         <tbody>
         {% for rig in rigs %}
             <tr>
-                <td><input type="checkbox" name=rig_list value="{{rig.rig}}" /></td>
-                <td>{{rig.rig}}</td>
-                <td>{{rig.rig_desc}}</td>
+                <td class="text-center"><input type="checkbox" name=rig_list value="{{rig.rig}}" /></td>
+                <td class="text-center">{{rig.rig}}</td>
+                <td class="text-center">{{rig.rig_desc}}</td>
             </tr>
         {% endfor %}
         </tbody>

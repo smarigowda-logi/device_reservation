@@ -3,34 +3,34 @@
 {% block content %}
         <div class= "jumbotron">
                 <h3 class="text-center">Edit Agent</h3>
-        </div>
+        </div><center>
         <form method="post" action="">
         <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
-        <table border="1">
-            <thead>
+        <table class="table table-bordered table-hover table-dark table-sm">
+            <thead class="thead-dark">
             <tr>
-                <th>Select Agent</th>
-                <th>Agent</th>
-                <th>Platform</th>
-                <th>Environment</th>
-                <th>UI Access</th>
-                <th>Serial</th>
-                <th>IP Address</th>
-                <th>Location</th>
+                <th class="text-center">Select Agent</th>
+                <th class="text-center">Agent</th>
+                <th class="text-center">Platform</th>
+                <th class="text-center">Environment</th>
+                <th class="text-center">UI Access</th>
+                <th class="text-center">Serial</th>
+                <th class="text-center">IP Address</th>
+                <th class="text-center">Location</th>
             </tr>
             </thead>
         <tbody>
         {% for agent in agents %}
             <tr>
-                <td><input type="radio" name=options value="{{agent.a_name}}" id="{{agent.a_name}}"/></td>
-                <td>{{agent.a_name}}</td>
-                <td>{{agent.a_platform}}</td>
-                <td>{{agent.a_env}}</td>
-                <td>{{agent.a_access}}</td>
-                <td>{{agent.a_serial}}</td>
-                <td>{{agent.a_ipaddr}}</td>
-                <td>{{agent.location}}</td>
+                <td class="text-center"><input type="radio" name=options value="{{agent.a_name}}" id="{{agent.a_name}}"/></td>
+                <td class="text-center">{{agent.a_name}}</td>
+                <td class="text-center">{{agent.a_platform}}</td>
+                <td class="text-center">{{agent.a_env}}</td>
+                <td class="text-center">{{agent.a_access}}</td>
+                <td class="text-center">{{agent.a_serial}}</td>
+                <td class="text-center">{{agent.a_ipaddr}}</td>
+                <td class="text-center">{{agent.location}}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -39,5 +39,5 @@
             <input class="btn btn-secondary" type="submit" value="Edit Agent">
         </div></main>
         </form>
-    </nav>
+</center>
 {% endblock %}

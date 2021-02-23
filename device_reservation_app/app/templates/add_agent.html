@@ -4,10 +4,23 @@
 {% block content %}
     <div class= "jumbotron">
                 <h3 class="text-center">Add Agent</h3>
-    </div>
+    </div><center>
     <div class="row text-center">
         <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-xs-12">
-            {{ wtf.quick_form(form) }}
+            <form action="" method="POST">
+                {{ form.csrf_token() }}
+            {{ wtf.form_field(form.agent_name, placeholder='Agent Name') }}
+            {{ wtf.form_field(form.agent_platform, placeholder='Agent Platform') }}
+            {{ wtf.form_field(form.agent_user, placeholder='Agent Username') }}
+            {{ wtf.form_field(form.agent_password, placeholder='Agent Password') }}
+            {{ wtf.form_field(form.agent_serial, placeholder='Agent DNS Name') }}
+            {{ wtf.form_field(form.agent_access, placeholder='Agent Access') }}
+            {{ wtf.form_field(form.agent_ipaddr, placeholder='Agent IP Address') }}
+            {{ wtf.form_field(form.agent_location, placeholder='Agent Location') }}
+            {{ wtf.form_field(form.agent_command_line_access, placeholder='Agent Command Line Access') }}
+            <input class="btn btn-primary" type="submit" value="Select Environment">
+            </form>
         </div>
     </div>
+    </center>
 {% endblock %}

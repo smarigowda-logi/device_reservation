@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
     {% if form %}
     {{ wtf.quick_form(form) }}
     <br>
@@ -17,34 +17,34 @@
     <div class="col-12">
         {% if agents.count() > 0 %}
         <h3 class="text-center">Below are your assigned reservations</h3>
-        <form method="post" action="">
-        <table align="center" border="1">
-            <thead>
+        <form id="reservation" method="post" action="">
+        <table class="table table-bordered table-hover table-dark table-sm">
+            <thead class="thead-dark">
             <tr>
-                <th>Select Agent</th>
-                <th>Agent</th>
-                <th>Platform</th>
-                <th>Environment</th>
-                <th>Duration(hours)</th>
-                <th>Reserved time</th>
+                <th class="text-center">Select Reservation</th>
+                <th class="text-center">Agent</th>
+                <th class="text-center">Platform</th>
+                <th class="text-center">Environment</th>
+                <th class="text-center">Duration(hours)</th>
+                <th class="text-center">Reserved time</th>
             </tr>
             </thead>
         <tbody>
         {% for agent in agents %}
             <tr>
-                <td><input type="radio" name=options value="{{agent.a_name}}" id="{{agent.a_name}}"/></td>
-                <td>{{agent.a_name}}</td>
-                <td>{{agent.a_platform}}</td>
-                <td>{{agent.a_env}}</td>
-                <td>{{agent.a_duration}}</td>
-                <td>{{agent.a_last_reserved}}</td>
+                <td class="text-center"><input type="radio" name=options value="{{agent.a_name}}"/></td>
+                <td class="text-center">{{agent.a_name}}</td>
+                <td class="text-center">{{agent.a_platform}}</td>
+                <td class="text-center">{{agent.a_env}}</td>
+                <td class="text-center">{{agent.a_duration}}</td>
+                <td class="text-center">{{agent.a_last_reserved}}</td>
             </tr>
         {% endfor %}
         </tbody>
         </table>
             <br>
-            <input class="btn btn-primary btn-sm" type="submit" name="release" value="Release Agent">
-            <input class="btn btn-primary btn-sm" type="submit" name="""extvalue="Extend reservation">
+            <input class="btn btn-primary btn-sm" type="submit" name="action" id="release" value="Release Reservation">
+            <input class="btn btn-primary btn-sm" type="submit" name="action" id="extend" value="Extend Reservation">
         </form>
         {% else %}
         <p><h3 align="center">No Current Active Reservation</h3></p><br>
@@ -52,26 +52,32 @@
         <br><br>
         {% if reservation.count() > 0 %}
         <h3 class="text-center">Below are your queued reservations</h3>
-
-        <table align="center" border="1" >
-        <thead>
+        <form id="queue_reserve" action="queue" method="POST">
+        <table class="table table-bordered table-hover table-dark table-sm">
+        <thead class="thead-dark">
         <tr>
-            <th>Platform</th>
-            <th>Environment</th>
-            <th>Duration(hours)</th>
+            <th class="text-center">Select Reservation</th>
+            <th class="text-center">Platform</th>
+            <th class="text-center">Environment</th>
+            <th class="text-center">Duration(hours)</th>
         </tr>
         </thead>
         <tbody>
         {% for r in reservation %}
             <tr>
-                <td>{{r.platform}}</td>
-                <td>{{r.env}}</td>
-                <td>{{r.duration}}</td>
+                <td class="text-center"><input type="radio" name=q_options value="{{{r.platform:r.env}}}"/></td>
+                <td class="text-center">{{r.platform}}</td>
+                <td class="text-center">{{r.env}}</td>
+                <td class="text-center">{{r.duration}}</td>
             </tr>
         {% endfor %}
         </tbody>
         </table>
+        <br>
+        <input class="btn btn-primary btn-sm" type="submit" name="action" id="queue" value="Cancel Queued Reservation">
+        </form>
         {% endif %}
+    </form>
     </div></div></center></main>
     </div>
     <main role="main" class="container-fluid">
@@ -82,7 +88,7 @@
             <div class="thumbnail">
               <div class="caption">
                 <h3>Reserve Device</h3>
-                <p>Select this option to reserve a device for manual testing</p>
+                <p>Select this option to reserve a Device</p>
                   <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Reserve Device"></p>
               </div>
             </div>
@@ -103,8 +109,8 @@
           <div class="col-sm-6 col-md-4">
             <div class="thumbnail">
               <div class="caption">
-                <h3>Device Inventory View</h3>
-                <p>Select this option to view current Device Inventory snapshot</p>
+                <h3>Inventory View</h3>
+                <p>Select this option to view Inventory snapshot</p>
                   <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Device Inventory View"></p>
               </div>
             </div>
@@ -152,3 +158,40 @@
     </div>
     </div></main>
 {% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const form = document.querySelector('#reservation');
+    const checkboxes = form.querySelectorAll('input[type=radio]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
+
+            checkValidity();
+        }
+    }
+
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if (checkboxes[i].checked) return true;
+        }
+
+        return false;
+    }
+
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'At least one radio button must be selected.' : '';
+        firstCheckbox.setCustomValidity(errorMessage);
+    }
+
+    init();
+})();
+</script>
+{% endblock %}
+

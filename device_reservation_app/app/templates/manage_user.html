@@ -8,18 +8,18 @@
     <form method="POST" action="">
     <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
-    <table align="center" border="1" >
-        <thead align="center">
+    <table class="table table-bordered table-hover table-dark table-sm">
+        <thead class="thead-dark">
         <tr align="center">
-            <th align="center">  User  </th>
-            <th align="center">  Access  </th>
+            <th class="text-center">  User  </th>
+            <th class="text-center">  Access  </th>
         </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
-                <td align="center">{{user.username}}</td>
-                <td align="center"><select class="form-select form-select-lg mb-3 align=center" name={{user.username}} id="{{user.username}}">
+                <td class="text-center">{{user.username}}</td>
+                <td class="text-center"><select class="form-select form-select-lg mb-3 align=center" name={{user.username}} id="{{user.username}}">
                     <option selected>{{ user.administrator }}</option>
                     <option value="General">General</option>
                     <option value="Admin">Admin</option>
