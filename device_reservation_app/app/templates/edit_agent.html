@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
         <div class= "jumbotron">
                 <h3 class="text-center">Edit Agent</h3>
-        </div><center>
-        <form method="post" action="">
+        </div>
+        <p><a href="{{ url_for('main.manage_agents') }}">&laquo; Back</a></p>
+        <center>
+        <form id="edit_agent" method="post" action="">
         <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
         <table class="table table-bordered table-hover table-dark table-sm">
@@ -30,14 +32,50 @@
                 <td class="text-center">{{agent.a_access}}</td>
                 <td class="text-center">{{agent.a_serial}}</td>
                 <td class="text-center">{{agent.a_ipaddr}}</td>
-                <td class="text-center">{{agent.location}}</td>
+                <td class="text-center">{{agent.a_location}}</td>
             </tr>
         {% endfor %}
         </tbody>
         </table>
              <br>
-            <input class="btn btn-secondary" type="submit" value="Edit Agent">
+            <input class="btn btn-primary" type="submit" value="Edit Agent">
         </div></main>
         </form>
 </center>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const form = document.querySelector('#edit_agent');
+    const checkboxes = form.querySelectorAll('input[type=radio]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
+
+            checkValidity();
+        }
+    }
+
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if (checkboxes[i].checked) return true;
+        }
+
+        return false;
+    }
+
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'At least one checkbox must be selected.' : '';
+        firstCheckbox.setCustomValidity(errorMessage);
+    }
+
+    init();
+})();
+</script>
 {% endblock %}

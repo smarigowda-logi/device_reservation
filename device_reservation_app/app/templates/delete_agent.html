@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
         <div class= "jumbotron">
                 <h3 class="text-center">Delete Agent</h3>
-            </div><center>
-        <form method="post" action="">
+            </div>
+        <p><a href="{{ url_for('main.manage_agents') }}">&laquo; Back</a></p>
+        <center>
+        <form id="delete_agent" method="post" action="">
         <table class="table table-bordered table-hover table-dark table-sm">
             <thead class="thead-dark">
             <tr>
@@ -26,7 +28,43 @@
         </tbody>
         </table>
             <br>
-            <input class="release_button" type="submit" value="Delete Agent">
+            <input class="btn btn-primary" type="submit" value="Delete Agent">
         </form>
     </center>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const form = document.querySelector('#delete_agent');
+    const checkboxes = form.querySelectorAll('input[type=checkbox]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
+
+            checkValidity();
+        }
+    }
+
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if (checkboxes[i].checked) return true;
+        }
+
+        return false;
+    }
+
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'At least one checkbox must be selected.' : '';
+        firstCheckbox.setCustomValidity(errorMessage);
+    }
+
+    init();
+})();
+</script>
 {% endblock %}

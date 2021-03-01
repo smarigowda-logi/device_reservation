@@ -5,25 +5,25 @@
     <div class= "jumbotron">
         <h2 class="text-center">Manage User Access</h2>
     </div>
+    <p><a href="{{ url_for('main.manage_agents') }}">&laquo; Back</a></p>
     <form method="POST" action="">
     <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
     <table class="table table-bordered table-hover table-dark table-sm">
         <thead class="thead-dark">
         <tr align="center">
-            <th class="text-center">  User  </th>
-            <th class="text-center">  Access  </th>
+            <th class="text-center">  Agent </th>
+            <th class="text-center">  Status  </th>
         </tr>
         </thead>
         <tbody>
-        {% for user in users %}
+        {% for agent in agents %}
             <tr>
-                <td class="text-center">{{user.username}}</td>
-                <td class="text-center"><select class="form-select form-select-lg mb-3 align=center" name={{user.username}} id="{{user.username}}">
-                    <option selected>{{ user.administrator }}</option>
-                    <option value="General">General</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Super Admin">Super Admin</option>
+                <td class="text-center">{{agent.a_name}}</td>
+                <td class="text-center"><select class="form-select form-select-lg mb-3 align=center" name={{agent.a_name}} id="{{agent.a_name}}">
+                    <option selected>{{ agent.a_status }}</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
                     </select>
                 </td>
             </tr>
@@ -36,4 +36,3 @@
         </main>
     </form>
 {% endblock %}
-

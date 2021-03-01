@@ -27,24 +27,27 @@ def before_request():
 @bp.route('/index', methods=['POST', 'GET'])
 @login_required
 def index():
+    reserved_time = {}
     app = current_app._get_current_object()
     Thread(target=reserve_obj.free_agent, args=(app, current_user.username)).start()
     user = User.query.filter_by(username=current_user.username).first_or_404()
     reservation = Reservation.query.filter_by(r_user=user.username)
     agents = Agentprofile.query.filter_by(a_owner=user.username)
+    for agent in agents:
+        reserved_time[agent.a_name] = datetime.strptime(agent.a_last_reserved, '%m-%d-%Y %H:%M:%S')
     if request.method == 'POST':
         agent = request.form['options']
-        print(agent)
         agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
         if request.form['action'] == 'Release Reservation':
-            agent_obj.a_owner = ''
+            agent_obj.a_owner = None
             agent_obj.a_duration = 0
-            agent_obj.a_last_reserved = ''
+            agent_obj.a_last_reserved = None
             db.session.commit()
+            slack_bot.post_message_to_slack('Reservation for Agent {} has been released'.format(agent_obj.a_name), current_user.username)
             return redirect(url_for('main.index'))
         elif request.form['action'] == 'Extend Reservation':
             return redirect(url_for('main.extend', agent=agent))
-    return render_template('index.html', title='Home', user=user, reservation=reservation, agents=agents)
+    return render_template('index.html', title='Home', user=user, reservation=reservation, agents=agents, time_dict=reserved_time)
 
 
 @bp.route('/queue', methods=['POST', 'GET'])
@@ -72,9 +75,9 @@ def queue():
 def extend(agent):
     days = []
     hours = []
-    for i in range(0, 6):
+    for i in range(1, 6):
         days.append(str(i))
-    for i in range(0, 24):
+    for i in range(1, 24):
         hours.append(str(i))
     if request.method == 'POST':
         day = 0 if (request.form.get('day') == '') else int(request.form.get('day'))
@@ -83,6 +86,8 @@ def extend(agent):
         agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
         agent_obj.a_duration = int(agent_obj.a_duration) + duration
         db.session.commit()
+        slack_bot.post_message_to_slack('Reservation for Agent {} has been extended by {} '
+                                        'hours'.format(agent_obj.a_name, duration), current_user.username)
         return redirect(url_for('main.index', username=current_user.username))
     return render_template('extend.html', agent=agent, days=days, hours=hours)
 
@@ -135,13 +140,13 @@ def reserve_device():
     platform_list = []
     days = []
     hours = []
-    agent = Agentprofile.query.all()
+    agent = Agentprofile.query.filter_by(a_status='Active').all()
     for a in agent:
         if not a.a_platform in platform_list:
             platform_list.append(a.a_platform)
-    for i in range(0, 6):
+    for i in range(1, 6):
         days.append(str(i))
-    for i in range(0, 24):
+    for i in range(1, 24):
         hours.append(str(i))
     if request.method == 'POST':
         print(request.form.get('platform'))
@@ -159,7 +164,7 @@ def reserve_device():
 @bp.route('/device_inventory', methods=['POST', 'GET'])
 @login_required
 def device_inventory():
-    agents = Agentprofile.query.all()
+    agents = Agentprofile.query.filter_by(a_status='Active').all()
     print(agents)
     return render_template('device_inventory.html', agents=agents)
 
@@ -202,7 +207,7 @@ def add_agent_env():
                              a_pass=session['agent']['a_pass'],
                              a_serial=session['agent']['a_serial'], a_access=session['agent']['a_access'],
                              a_ipaddr=session['agent']['a_ipaddr'], a_location=session['agent']['a_location'],
-                             a_command_line=session['agent']['a_command_line'], a_env=env)
+                             a_command_line=session['agent']['a_command_line'], a_status='Active', a_env=env)
         db.session.add(agent)
         db.session.commit()
         flash('Agent ' + session['agent']['a_name'] + ' successfully added to inventory')
@@ -218,7 +223,8 @@ def delete_agent():
         agent_list = request.form.getlist('agent_list')
         for agent in agent_list:
             agent_obj = Agentprofile.query.filter_by(a_name=agent).first()
-            if agent_obj.a_owner == "":
+            print(agent_obj.a_owner)
+            if not agent_obj.a_owner:
                 db.session.delete(agent_obj)
                 db.session.commit()
                 flash('Selected agents successfully deleted from inventory')
@@ -231,7 +237,7 @@ def delete_agent():
 @bp.route('/edit_agent', methods=['POST', 'GET'])
 @login_required
 def edit_agent():
-    agents = Agentprofile.query.all()
+    agents = Agentprofile.query.filter_by(a_status='Active').all()
     if request.method == 'POST':
         agent = request.form['options']
         return redirect(url_for('main.edit_agent_detail', agent_name=agent))
@@ -245,17 +251,20 @@ def edit_agent_detail(agent_name):
     edit_agent = {}
     agent = Agentprofile.query.filter_by(a_name=agent_name).first()
     if request.method == 'POST':
-        edit_agent['a_name'] = form.agent_name.data
-        edit_agent['a_platform'] = form.agent_platform.data
-        edit_agent['a_user'] = form.agent_user.data
-        edit_agent['a_pass'] = form.agent_password.data
-        edit_agent['a_ipaddr'] = form.agent_ipaddr.data
-        edit_agent['a_access'] = form.agent_access.data
-        edit_agent['a_serial'] = form.agent_serial.data
-        edit_agent['a_location'] = form.agent_location.data
-        edit_agent['a_command_line'] = form.agent_command_line_access.data
-        session['edit_agent'] = edit_agent
-        return redirect(url_for('main.edit_agent_env', edit_agent_name=edit_agent['a_name']))
+        if request.form['action'] == 'Next':
+            edit_agent['a_name'] = form.agent_name.data
+            edit_agent['a_platform'] = form.agent_platform.data
+            edit_agent['a_user'] = form.agent_user.data
+            edit_agent['a_pass'] = form.agent_password.data
+            edit_agent['a_ipaddr'] = form.agent_ipaddr.data
+            edit_agent['a_access'] = form.agent_access.data
+            edit_agent['a_serial'] = form.agent_serial.data
+            edit_agent['a_location'] = form.agent_location.data
+            edit_agent['a_command_line'] = form.agent_command_line_access.data
+            session['edit_agent'] = edit_agent
+            return redirect(url_for('main.edit_agent_env', agent_name=agent_name))
+        elif request.form['action'] == 'Cancel':
+            return redirect(url_for('main.edit_agent_detail', agent_name=agent_name))
     elif request.method == 'GET':
         form.agent_name.data = agent.a_name
         form.agent_platform.data = agent.a_platform
@@ -266,17 +275,17 @@ def edit_agent_detail(agent_name):
         form.agent_serial.data = agent.a_serial
         form.agent_location.data = agent.a_location
         form.agent_command_line_access.data = agent.a_command_line
-    return render_template('edit_agent_detail.html', form=form)
+    return render_template('edit_agent_detail.html', form=form, agent=agent)
 
 
-@bp.route('/edit_agent_env/<edit_agent_name>', methods=['POST', 'GET'])
+@bp.route('/edit_agent_env/<agent_name>', methods=['POST', 'GET'])
 @login_required
-def edit_agent_env(edit_agent_name):
+def edit_agent_env(agent_name):
     env_hash = {}
     env_all = Rigdescriptor.query.all()
     for env in env_all:
         env_hash[env.rig] = env.rig_desc
-    agent = Agentprofile.query.filter_by(a_name=edit_agent_name).first()
+    agent = Agentprofile.query.filter_by(a_name=agent_name).first()
     current_env = agent.a_env.split(',')
     if request.method == 'POST':
         agent.a_name = session['edit_agent']['a_name']
@@ -293,11 +302,28 @@ def edit_agent_env(edit_agent_name):
                     for key in request.form.keys())
         env_list = [key for key in data.keys()]
         a_env = ', '.join(env_list)
-        agent.a_env = agent.a_env + ',' + a_env
+        agent.a_env = a_env
         db.session.commit()
         flash('Changes to agent ' + agent.a_name + ' saved to inventory')
         return redirect(url_for('main.manage_agents'))
-    return render_template('edit_agent_env.html', current_rig=current_env, env_hash=env_hash)
+    return render_template('edit_agent_env.html', current_rig=current_env, env_hash=env_hash, agent_name=agent_name)
+
+
+@bp.route('/maintain_agent', methods=['POST', 'GET'])
+@login_required
+def maintain_agent():
+    agents = Agentprofile.query.all()
+    if request.method == 'POST':
+        for agent in agents:
+            status = request.form[agent.a_name]
+            if not agent.a_owner:
+                agent.a_status = status
+                db.session.commit()
+            else:
+                flash('Agent '+ agent.a_name + ' is being used by ' + agent.a_owner + '. Please make sure the agent is'
+                                                                                      ' not reserved.')
+        return redirect(url_for('main.maintain_agent'))
+    return render_template('maintain_agent.html', agents=agents)
 
 
 @bp.route('/manage_rig', methods=['POST', 'GET'])
@@ -357,11 +383,14 @@ def edit_rig_detail(rig):
     form = EditRig()
     rig_info = Rigdescriptor.query.filter_by(rig=rig).first()
     if request.method == 'POST':
-        rig_info.rig = form.rig.data
-        rig_info.rig_desc = form.rig_desc.data
-        db.session.commit()
-        flash('Changes saved for rig ' + rig_info.rig)
-        return redirect(url_for('main.manage_rig'))
+        if request.form['action'] == 'Edit Rig':
+            rig_info.rig = form.rig.data
+            rig_info.rig_desc = form.rig_desc.data
+            db.session.commit()
+            flash('Changes saved for rig ' + rig_info.rig)
+            return redirect(url_for('main.manage_rig'))
+        elif request.form['action'] == 'Cancel':
+            return redirect(url_for('main.edit_rig_detail', rig=rig))
     elif request.method == 'GET':
         form.rig.data = rig_info.rig
         form.rig_desc.data = rig_info.rig_desc
@@ -410,7 +439,7 @@ def reserve():
     agent_dict = {}
     agent_list = []
 
-    agent_filter = Agentprofile.query.all()
+    agent_filter = Agentprofile.query.filter_by(a_status='Active').all()
     for a in agent_filter:
         agent_env_list = a.a_env.replace(' ', '').split(',')
         r_env_list = session['env'].split(',')

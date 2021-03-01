@@ -62,7 +62,9 @@ class EditAgent(FlaskForm):
     agent_ipaddr = StringField('IP Address', [DataRequired()])
     agent_location = StringField('Location', [DataRequired()])
     agent_command_line_access = StringField('Command Line Access', [DataRequired()])
+    submit1 = SubmitField('Cancel')
     submit = SubmitField('Edit Agent')
+
 
     def __init__(self, *args, **kwargs):
         super(EditAgent, self).__init__(*args, **kwargs)

@@ -5,9 +5,23 @@
     <div class= "jumbotron">
         <h3 class="text-center">Edit Agent</h3>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
+    <p><a href="{{ url_for('main.edit_agent') }}">&laquo; Back</a></p>
+    <center>
+        <div class="row text-center">
+        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-xs-12">
+            <form action="" method="POST">
+            {{ wtf.form_field(form.agent_name) }}
+            {{ wtf.form_field(form.agent_platform) }}
+            {{ wtf.form_field(form.agent_user) }}
+            {{ wtf.form_field(form.agent_password) }}
+            {{ wtf.form_field(form.agent_serial) }}
+            {{ wtf.form_field(form.agent_access) }}
+            {{ wtf.form_field(form.agent_ipaddr) }}
+            {{ wtf.form_field(form.agent_location) }}
+            {{ wtf.form_field(form.agent_command_line_access) }}
+            <input class="btn btn-primary" name="action" type="submit" value="Cancel">
+            <input class="btn btn-primary" name="action" type="submit" value="Next">
+            </form>
+        </div></div>
+    </center>
 {% endblock %}

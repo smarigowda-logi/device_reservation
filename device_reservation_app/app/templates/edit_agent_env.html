@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <div class= "jumbotron">
                 <h3 class="text-center">Edit environment</h3>
     </div>
+    <p><a href="{{ url_for('main.edit_agent') }}">&laquo; Back</a></p>
+    <center>
     <form action="" method="post">
     <main role="main" class="container-fluid">
     <div class="row text-center justify-content-center">
     <table class="table table-bordered table-hover table-dark table-sm">
     <thead class="thead-dark">
     <tr>
-      <th scope="col" class="text-center"></th>
-      <th scope="col" class="text-center">Rig/Env</th>
-      <th scope="col" class="text-center">Description</th>
+      <th class="text-center"></th>
+      <th class="text-center">Rig/Env</th>
+      <th class="text-center">Description</th>
     </tr>
     </thead>
     <tbody>
@@ -34,4 +36,5 @@
     </main>
     </div></main>
     </form>
+    </center>
 {% endblock %}

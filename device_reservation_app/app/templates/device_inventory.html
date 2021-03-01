@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
     <div class= "jumbotron">
-                <h2 class="text-center">Device Inventory View</h2>
+                <h2 class="text-center">Inventory View</h2>
     </div>
 
     <table class="table table-bordered table-hover table-dark table-sm">
@@ -26,7 +26,7 @@
                 <td class="text-center">{{agent.a_access}}</td>
                 <td class="text-center">{{agent.a_location}}</td>
                 {% if agent.a_owner %}
-                <td class="text-center">Reserved</td>
+                <td class="text-center">Reserved by {{agent.a_owner}}</td>
                 {% else %}
                 <td class="text-center">Available</td>
                 {% endif %}

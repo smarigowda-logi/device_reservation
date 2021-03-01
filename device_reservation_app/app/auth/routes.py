@@ -6,12 +6,15 @@ from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
+from app.slack_message import SlackBot
 from app.auth.email import send_password_reset_email
+
+slack_bot = SlackBot()
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
+    if current_user.is_active and current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -56,10 +59,20 @@ def reset_password_request():
         return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
+        print(user)
         if user:
-            send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password')
+            token = user.get_reset_password_token()
+            print(token)
+            reset_password_message = 'Dear ' + user.username +',\nTo reset your password: ' \
+                                     '<' + url_for('auth.reset_password', token=token, _external=True) +\
+                                     '|click here>.\nAlternatively, you can paste the following link ' \
+                                     'in your browser\'s address bar:' + url_for('auth.reset_password', token=token,
+                                                                                 _external=True) +\
+                                     ' . If you have not requested a password reset simply ignore this message.' \
+                                     '\nSincerely,\nDevice Reservation Team\n'
+            slack_bot.post_message_to_slack(reset_password_message, user.username)
+            flash('Check your slack message for the instructions to reset your password')
         return redirect(url_for('auth.login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)

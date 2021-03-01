@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
 
-    <div class= "jumbotron"><center>
+    <div class= "jumbotron">
                 <h3 class="text-center">Select environment values</h3>
-
+     </div>
+    <p><a href="{{ url_for('main.reserve_device') }}">&laquo; Back</a></p>
+    <center>
     <form id="getenv" action="" method="post">
-
-
     <table class="table table-bordered table-hover table-dark table-sm">
     <thead align="center">
-    <tr align="center">
+    <tr>
       <th class="text-center"></th>
       <th class="text-center">Rig/Env</th>
       <th class="text-center">Description</th>
@@ -25,7 +25,7 @@
     </tr>
     {% endfor %}
     </table>
-    <br><br><br>
+    <br>
      <main role="main" class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12">
@@ -35,7 +35,7 @@
     </main>
     </form>
     </center>
-    </div>
+
 {% endblock %}
 
 {% block scripts %}

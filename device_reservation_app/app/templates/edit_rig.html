@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
         <div class= "jumbotron">
                 <h3 class="text-center">Edit Rig</h3>
         </div>
-        <form method="post" action="">
+        <p><a href="{{ url_for('main.manage_rig') }}">&laquo; Back</a></p>
+        <form id="edit_rig" method="post" action="">
         <main role="main" class="container-fluid">
         <div class="row text-center justify-content-center">
         <table class="table table-bordered table-hover table-dark table-sm">
@@ -26,7 +27,43 @@
         </tbody>
         </table>
              <br>
-            <input class="btn btn-secondary" type="submit" value="Edit Rig">
+            <input class="btn btn-primary" type="submit" value="Edit Rig">
         </div></main>
         </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const form = document.querySelector('#edit_rig');
+    const checkboxes = form.querySelectorAll('input[type=radio]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
+
+            checkValidity();
+        }
+    }
+
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if (checkboxes[i].checked) return true;
+        }
+
+        return false;
+    }
+
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'At least one radio button must be selected.' : '';
+        firstCheckbox.setCustomValidity(errorMessage);
+    }
+
+    init();
+})();
+</script>
 {% endblock %}

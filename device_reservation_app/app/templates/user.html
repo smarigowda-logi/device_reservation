@@ -1,31 +1,31 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
      <div class= "jumbotron">
                 <h4>Hello {{ user.username }} </h4>
-                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+                {% if user.last_seen %}<p>Last seen on: {{ moment(user.last_seen).format('lll') }}</p>{% endif %}
                 <h2 class="text-center">Here is your reservation history</h2>
     </div>
     <main role="main" class="container-fluid">
     <div class="row text-center justify-content-center">
         <table class="table table-bordered table-hover table-dark table-sm">
-            <thead>
+            <thead class="thead-dark">
             <tr>
-                <th>Agent</th>
-                <th>Platform</th>
-                <th>Environment</th>
-                <th>Duration(hours)</th>
-                <th>Reserved time</th>
+                <th class="text-center">Agent</th>
+                <th class="text-center">Platform</th>
+                <th class="text-center">Environment</th>
+                <th class="text-center">Duration(hours)</th>
+                <th class="text-center">Reserved time</th>
             </tr>
             </thead>
         <tbody>
         {% for history in user_history %}
             <tr>
-                <td>{{history.agent}}</td>
-                <td>{{history.platform}}</td>
-                <td>{{history.env}}</td>
-                <td>{{history.duration}}</td>
-                <td>{{history.reserved_time}}</td>
+                <td class="text-center">{{history.agent}}</td>
+                <td class="text-center">{{history.platform}}</td>
+                <td class="text-center">{{history.env}}</td>
+                <td class="text-center">{{history.duration}}</td>
+                <td class="text-center">{{moment(history.reserved_time).format('lll')}}</td>
             </tr>
         {% endfor %}
         </tbody>

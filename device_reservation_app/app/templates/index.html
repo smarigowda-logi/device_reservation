@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     {% if form %}
@@ -25,7 +24,7 @@
                 <th class="text-center">Agent</th>
                 <th class="text-center">Platform</th>
                 <th class="text-center">Environment</th>
-                <th class="text-center">Duration(hours)</th>
+                <th class="text-center">Duration<br>(hours)</th>
                 <th class="text-center">Reserved time</th>
             </tr>
             </thead>
@@ -37,7 +36,7 @@
                 <td class="text-center">{{agent.a_platform}}</td>
                 <td class="text-center">{{agent.a_env}}</td>
                 <td class="text-center">{{agent.a_duration}}</td>
-                <td class="text-center">{{agent.a_last_reserved}}</td>
+                <td class="text-center">{{ moment(time_dict[agent.a_name]).format('lll') }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -87,24 +86,24 @@
           <div class="col-sm-6 col-md-4 align=center">
             <div class="thumbnail">
               <div class="caption">
-                <h3>Reserve Device</h3>
-                <p>Select this option to reserve a Device</p>
+                <h3>Reserve Device </h3>
+                <p>Select this option to reserve a Device </p>
                   <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Reserve Device"></p>
               </div>
             </div>
           </div>
     </form>
-    <form action="job_schedule">
-          <div class="col-sm-6 col-md-4 align=center">
-            <div class="thumbnail">
-              <div class="caption">
-                <h3>Job Schedule</h3>
-                <p>Select this option to configure and run jenkins job</p>
-                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Schedule Jenkins Job"></p>
-              </div>
-            </div>
-          </div>
-    </form>
+<!--    <form action="job_schedule">-->
+<!--          <div class="col-sm-6 col-md-4 align=center">-->
+<!--            <div class="thumbnail">-->
+<!--              <div class="caption">-->
+<!--                <h3>Job Schedule</h3>-->
+<!--                <p>Select this option to configure and run jenkins job</p>-->
+<!--                  <p><input class="btn btn-primary btn-lg btn-block" type="submit" value="Schedule Jenkins Job"></p>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--    </form>-->
      <form action="device_inventory">
           <div class="col-sm-6 col-md-4">
             <div class="thumbnail">
@@ -160,6 +159,8 @@
 {% endblock %}
 
 {% block scripts %}
+{{ moment.include_jquery() }}
+{{ moment.include_moment() }}
 <script>
 (function() {
     const form = document.querySelector('#reservation');

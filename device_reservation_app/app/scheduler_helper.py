@@ -35,7 +35,7 @@ class ReservationHelper:
                         agent_stat.a_owner = username
                         agent_stat.a_duration = reserve_agent.duration
                         time1 = datetime.utcnow()
-                        str_time = time1.strftime("%m/%d/%Y, %H:%M:%S")
+                        str_time = time1.strftime("%m-%d-%Y %H:%M:%S")
                         agent_stat.a_last_reserved = str_time
                         db.session.delete(reserve_agent)
                         db.session.commit()
@@ -61,28 +61,26 @@ class ReservationHelper:
                                 break
                             print(agent_stat.a_duration)
                             time.sleep(10)
-                        agent_stat.a_owner = ''
+                        agent_stat.a_owner = None
                         agent_stat.a_duration = 0
-                        agent_stat.a_last_reserved = ''
+                        agent_stat.a_last_reserved = None
                         db.session.commit()
 
     def free_agent(self, app, username):
         with app.app_context():
-            agents = Agentprofile.query.all()
+            agents = Agentprofile.query.filter_by(a_status='Active').all()
             for agent in agents:
                 if agent.a_owner:
                     reserved_time = agent.a_last_reserved
-                    print(reserved_time)
-                    reserved_datetime = datetime.strptime(reserved_time, '%m/%d/%Y, %H:%M:%S')
+                    reserved_datetime = datetime.strptime(reserved_time, '%m-%d-%Y %H:%M:%S')
                     expire_time = reserved_datetime + timedelta(hours=agent.a_duration)
-                    print(expire_time, datetime.utcnow())
                     if expire_time < datetime.utcnow():
-                        agent.a_owner = ''
+                        agent.a_owner = None
                         agent.a_duration = 0
-                        agent.a_last_reserved = ''
+                        agent.a_last_reserved = None
                         db.session.commit()
             reservations = Reservation.query.all()
-            free_agents = Agentprofile.query.filter_by(a_owner='').all()
+            free_agents = Agentprofile.query.filter_by(a_owner=None).all()
             if free_agents:
                 for reservation in reservations:
                     reserve_list = reservation.env.split(',')
@@ -93,8 +91,9 @@ class ReservationHelper:
                             free_agent.a_owner = reservation.r_user
                             free_agent.a_duration = reservation.duration
                             time1 = datetime.utcnow()
-                            str_time = time1.strftime("%m/%d/%Y, %H:%M:%S")
-                            free_agent.a_last_reserved = str_time
+                            print(time1)
+                            str_time = time1.strftime("%m-%d-%Y %H:%M:%S")
+                            free_agent.a_s = str_time
                             slack_bot.post_message_to_slack('Agent {} reserved under your name for {} hours.'
                                                             ' Below are the agent details: \n IP Address: {} \n Serial'
                                                             ' number: {} \n UI_Access: {} \nUsername: {} \n '

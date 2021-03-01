@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <div class= "jumbotron">
                 <h3 class="text-center">Add environment</h3>
     </div>
+    <p><a href="{{ url_for('main.add_agents') }}">&laquo; Back</a></p>
     <form action="" method="post">
     <main role="main" class="container-fluid">
     <div class="row text-center justify-content-center">
@@ -11,8 +12,8 @@
     <thead class="thead-dark">
     <tr align="center">
       <th class="text-center"></th>
-      <th>Rig/Env</th>
-      <th>Description</th>
+      <th class="text-center">Rig/Env</th>
+      <th class="text-center">Description</th>
     </tr>
     </thead>
     <tbody>
@@ -29,7 +30,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
      <div class="row text-center">
-    <input class="btn btn-secondary" type="submit" value="Add Rigs to Agent">
+    <input class="btn btn-primary" type="submit" value="Add Rigs to Agent">
      </div></div></div>
     </main>
     </div></main>

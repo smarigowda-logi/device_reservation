@@ -133,6 +133,7 @@ class Agentprofile(db.Model):
     a_duration = db.Column(db.Integer)
     a_owner = db.Column(db.String(64))
     a_last_reserved = db.Column(db.String(64))
+    a_status = db.Column(db.String(64))
 
     def __repr__(self):
         return '<Agent {}>'.format(self.a_name)
